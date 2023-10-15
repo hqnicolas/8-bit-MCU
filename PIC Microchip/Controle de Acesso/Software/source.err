@@ -1,0 +1,4 @@
+>>> Warning 202 "source.c" Line 12(9,15): Variable never used:   senhar
+>>> Warning 202 "source.c" Line 12(113,121): Variable never used:   barreira
+      Memory usage:   ROM=42%      RAM=10% - 11%
+      0 Errors,  2 Warnings.

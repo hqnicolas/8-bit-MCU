@@ -1,0 +1,41 @@
+[PROJECT]
+Target=source.HEX
+Development_Mode=2
+Processor=0x877A
+Processor_Text=PIC16F877A
+ToolSuite=CCS
+
+[Directories]
+Include=
+Library=
+LinkerScript=
+
+[Target Data]
+FileList=C:\Documents and Settings\DPMarcelo\Desktop\Competencia 3ª fase\PIC-C programação\source.c
+BuildTool=C-COMPILER
+OptionString=+FM
+AdditionalOptionString=
+BuildRequired=1
+
+[source.c]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+
+[mru-list]
+1=source.c
+
+[Windows]
+0=0000 source.c 0 0 796 451 3 0
+
+[Opened Files]
+1=C:\Users\PC-HotnikQ\Desktop\Editor\SATC\Projetos\Competencia 3ª fase\PIC-C programação\source.c
+2=
+3=
+4=
+[Units]
+Count=1
+1=source.c (main)

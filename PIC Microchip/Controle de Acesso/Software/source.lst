@@ -1,0 +1,3764 @@
+CCS PCM C Compiler, Version 4.068, 13054               10-nov-10 19:12
+
+               Filename: C:\Users\PC-HotnikQ\Desktop\Editor\SATC\Projetos\Competencia 3ª fase\PIC-C programação\source.lst
+
+               ROM used: 3474 words (42%)
+                         Largest free fragment is 2048
+               RAM used: 38 (10%) at main() level
+                         42 (11%) worst case
+               Stack:    5 worst case (4 in main + 1 for interrupts)
+
+*
+0000:  MOVLW  08
+0001:  MOVWF  0A
+0002:  GOTO   3E0
+0003:  NOP
+0004:  MOVWF  7F
+0005:  SWAPF  03,W
+0006:  CLRF   03
+0007:  MOVWF  25
+0008:  MOVF   0A,W
+0009:  MOVWF  24
+000A:  CLRF   0A
+000B:  MOVF   04,W
+000C:  MOVWF  26
+000D:  MOVF   77,W
+000E:  MOVWF  27
+000F:  MOVF   78,W
+0010:  MOVWF  28
+0011:  MOVF   79,W
+0012:  MOVWF  29
+0013:  MOVF   7A,W
+0014:  MOVWF  2A
+0015:  MOVF   7B,W
+0016:  MOVWF  2B
+0017:  BCF    03.7
+0018:  BCF    03.5
+0019:  MOVLW  8C
+001A:  MOVWF  04
+001B:  BTFSS  00.0
+001C:  GOTO   01F
+001D:  BTFSC  0C.0
+001E:  GOTO   032
+001F:  MOVF   26,W
+0020:  MOVWF  04
+0021:  MOVF   27,W
+0022:  MOVWF  77
+0023:  MOVF   28,W
+0024:  MOVWF  78
+0025:  MOVF   29,W
+0026:  MOVWF  79
+0027:  MOVF   2A,W
+0028:  MOVWF  7A
+0029:  MOVF   2B,W
+002A:  MOVWF  7B
+002B:  MOVF   24,W
+002C:  MOVWF  0A
+002D:  SWAPF  25,W
+002E:  MOVWF  03
+002F:  SWAPF  7F,F
+0030:  SWAPF  7F,W
+0031:  RETFIE
+0032:  BCF    0A.3
+0033:  BCF    0A.4
+0034:  GOTO   2B9
+.................... /* 
+....................  
+.................... Programado por: Nicolas Pereira e Jean Savi 
+....................  
+.................... */ 
+.................... #include <16F877A.h> 
+.................... //////// Standard Header file for the PIC16F877A device //////////////// 
+.................... #device PIC16F877A 
+.................... #list 
+....................  
+.................... #device adc=10 
+.................... #use delay(clock=4000000)  
+*
+030A:  MOVLW  3F
+030B:  MOVWF  04
+030C:  BCF    03.7
+030D:  MOVF   00,W
+030E:  BTFSC  03.2
+030F:  GOTO   31E
+0310:  MOVLW  01
+0311:  MOVWF  78
+0312:  CLRF   77
+0313:  DECFSZ 77,F
+0314:  GOTO   313
+0315:  DECFSZ 78,F
+0316:  GOTO   312
+0317:  MOVLW  4A
+0318:  MOVWF  77
+0319:  DECFSZ 77,F
+031A:  GOTO   319
+031B:  GOTO   31C
+031C:  DECFSZ 00,F
+031D:  GOTO   310
+031E:  RETLW  00
+.................... #fuses XT,NOWDT,NOPUT,NOPROTECT,NOBROWNOUT,NOLVP,NOCPD,NOWRT   
+....................  
+....................    int8 filtro,cesegundos,desegundos,segundos,parado,editando,ir,menuprince,car1=0,car2=0,car3=0,car4=0,senha1=0,senha2=9,senha3=1,senha4=1; 
+*
+0BEB:  BCF    03.5
+0BEC:  CLRF   30
+0BED:  CLRF   31
+0BEE:  CLRF   32
+0BEF:  CLRF   33
+0BF0:  CLRF   34
+0BF1:  MOVLW  09
+0BF2:  MOVWF  35
+0BF3:  MOVLW  01
+0BF4:  MOVWF  36
+0BF5:  MOVWF  37
+....................    int1 senhar=0,comandar=0,click=0,esquerda=0,direita=0,entra=0,sai=0,cima=0,baixo=0,logado=0,abrir=0,fechar=0,barreira=0; 
+0BF6:  BCF    38.0
+0BF7:  BCF    38.1
+0BF8:  BCF    38.2
+0BF9:  BCF    38.3
+0BFA:  BCF    38.4
+0BFB:  BCF    38.5
+0BFC:  BCF    38.6
+0BFD:  BCF    38.7
+0BFE:  BCF    39.0
+0BFF:  BCF    39.1
+0C00:  BCF    39.2
+0C01:  BCF    39.3
+0C02:  BCF    39.4
+....................    char buffer[1]; 
+....................     
+....................    #locate parado= 0x20 
+....................    #locate ir= 0x21 
+....................    #locate menuprince= 0x22 
+....................    #locate segundos= 0x23 
+....................  
+.................... #int_timer1 
+.................... void tempo(timer1) 
+.................... { 
+.................... set_timer1(15535); 
+*
+02B9:  MOVLW  3C
+02BA:  MOVWF  0F
+02BB:  MOVLW  AF
+02BC:  MOVWF  0E
+.................... cesegundos++; 
+02BD:  INCF   2D,F
+....................  
+....................    if (cesegundos==2) 
+02BE:  MOVF   2D,W
+02BF:  SUBLW  02
+02C0:  BTFSS  03.2
+02C1:  GOTO   2C4
+....................    { 
+....................    desegundos++; 
+02C2:  INCF   2E,F
+....................    (cesegundos=0); 
+02C3:  CLRF   2D
+....................    } 
+....................    if (desegundos==10) 
+02C4:  MOVF   2E,W
+02C5:  SUBLW  0A
+02C6:  BTFSS  03.2
+02C7:  GOTO   2CA
+....................    { 
+....................    segundos++; 
+02C8:  INCF   23,F
+....................    (desegundos=0); 
+02C9:  CLRF   2E
+....................    } 
+....................     
+....................     if (!input(pin_b0)) 
+02CA:  BSF    03.5
+02CB:  BSF    06.0
+02CC:  BCF    03.5
+02CD:  BTFSC  06.0
+02CE:  GOTO   2D5
+....................    { 
+....................    output_low(pin_c0); 
+02CF:  BCF    3B.0
+02D0:  MOVF   3B,W
+02D1:  BSF    03.5
+02D2:  MOVWF  07
+02D3:  BCF    03.5
+02D4:  BCF    07.0
+....................    } 
+....................    if (!input(pin_b2)) 
+02D5:  BSF    03.5
+02D6:  BSF    06.2
+02D7:  BCF    03.5
+02D8:  BTFSC  06.2
+02D9:  GOTO   2E0
+....................    { 
+....................    output_low(pin_c1); 
+02DA:  BCF    3B.1
+02DB:  MOVF   3B,W
+02DC:  BSF    03.5
+02DD:  MOVWF  07
+02DE:  BCF    03.5
+02DF:  BCF    07.1
+....................    } 
+....................     
+....................    if ((!input(pin_b7))&&(input(pin_b0))&&(input(pin_b2))) 
+02E0:  BSF    03.5
+02E1:  BSF    06.7
+02E2:  BCF    03.5
+02E3:  BTFSC  06.7
+02E4:  GOTO   301
+02E5:  BSF    03.5
+02E6:  BSF    06.0
+02E7:  BCF    03.5
+02E8:  BTFSS  06.0
+02E9:  GOTO   301
+02EA:  BSF    03.5
+02EB:  BSF    06.2
+02EC:  BCF    03.5
+02ED:  BTFSS  06.2
+02EE:  GOTO   301
+....................    { 
+....................    (output_low(pin_c0)); 
+02EF:  BCF    3B.0
+02F0:  MOVF   3B,W
+02F1:  BSF    03.5
+02F2:  MOVWF  07
+02F3:  BCF    03.5
+02F4:  BCF    07.0
+....................    (output_low(pin_c1)); 
+02F5:  BCF    3B.1
+02F6:  MOVF   3B,W
+02F7:  BSF    03.5
+02F8:  MOVWF  07
+02F9:  BCF    03.5
+02FA:  BCF    07.1
+....................    (output_high(pin_c0)); 
+02FB:  BCF    3B.0
+02FC:  MOVF   3B,W
+02FD:  BSF    03.5
+02FE:  MOVWF  07
+02FF:  BCF    03.5
+0300:  BSF    07.0
+....................    } 
+....................    if ((segundos)>(59)) 
+0301:  MOVF   23,W
+0302:  SUBLW  3B
+0303:  BTFSC  03.0
+0304:  GOTO   306
+....................    { 
+....................    segundos=0; 
+0305:  CLRF   23
+....................    } 
+.................... } 
+....................  
+0306:  BCF    0C.0
+0307:  BCF    0A.3
+0308:  BCF    0A.4
+0309:  GOTO   01F
+.................... void pulso()  
+.................... { 
+....................    output_high(PIN_C7); // Seta pino de "Enable"... 
+*
+031F:  BCF    3B.7
+0320:  MOVF   3B,W
+0321:  BSF    03.5
+0322:  MOVWF  07
+0323:  BCF    03.5
+0324:  BSF    07.7
+....................    delay_cycles(10); // Espera 10 ciclos de máquina... 
+0325:  MOVLW  03
+0326:  MOVWF  77
+0327:  DECFSZ 77,F
+0328:  GOTO   327
+....................    output_low(PIN_C7); // Reseta pino de "Enable"... 
+0329:  BCF    3B.7
+032A:  MOVF   3B,W
+032B:  BSF    03.5
+032C:  MOVWF  07
+032D:  BCF    03.5
+032E:  BCF    07.7
+.................... } 
+032F:  RETLW  00
+....................  
+.................... void limpa()  
+.................... { 
+....................    output_low(PIN_C4); // Seleciona display para comandos (resetando-se o pino RS do LCD)... 
+*
+039B:  BCF    3B.4
+039C:  MOVF   3B,W
+039D:  BSF    03.5
+039E:  MOVWF  07
+039F:  BCF    03.5
+03A0:  BCF    07.4
+....................    output_d(0x00); 
+03A1:  BSF    03.5
+03A2:  CLRF   08
+03A3:  BCF    03.5
+03A4:  CLRF   08
+....................    pulso(); 
+03A5:  CALL   31F
+....................    output_d(0x10); 
+03A6:  BSF    03.5
+03A7:  CLRF   08
+03A8:  MOVLW  10
+03A9:  BCF    03.5
+03AA:  MOVWF  08
+....................    pulso(); 
+03AB:  CALL   31F
+....................    delay_ms(2); // Envia o comando 0x01 para o LCD e espera 2 ms (necessário para resposta do display)... 
+03AC:  MOVLW  02
+03AD:  MOVWF  3F
+03AE:  CALL   30A
+.................... } 
+03AF:  RETLW  00
+....................  
+.................... void posicao(int x,y)  
+.................... { 
+....................    int z,w; // Variáveis temporárias locais... 
+....................    z=0; 
+03B0:  CLRF   40
+....................    output_low(PIN_C4); // Seleciona display para comandos... 
+03B1:  BCF    3B.4
+03B2:  MOVF   3B,W
+03B3:  BSF    03.5
+03B4:  MOVWF  07
+03B5:  BCF    03.5
+03B6:  BCF    07.4
+....................    switch (y) // Tabela tipo case para determinar em qual linha deverá ser posicionado o cursor... 
+....................    { 
+03B7:  MOVF   3F,W
+03B8:  BTFSC  03.2
+03B9:  GOTO   3BE
+03BA:  XORLW  01
+03BB:  BTFSC  03.2
+03BC:  GOTO   3C1
+03BD:  GOTO   3C4
+....................       case 0: z=0x80; // Posiciona na linha 0... 
+03BE:  MOVLW  80
+03BF:  MOVWF  40
+....................       break; 
+03C0:  GOTO   3C4
+....................       case 1: z=0xC0; // Posiciona na linha 1... 
+03C1:  MOVLW  C0
+03C2:  MOVWF  40
+....................       break; 
+03C3:  GOTO   3C4
+....................    } 
+....................    switch (x) // Tabela tipo case para determinar em qual coluna deverá ser posicionado o cursor... 
+....................    { 
+03C4:  MOVF   3E,W
+03C5:  ADDLW  F0
+03C6:  BTFSC  03.0
+03C7:  GOTO   3F9
+03C8:  ADDLW  10
+03C9:  GOTO   40A
+....................       case 0: w=0x00; // Posiciona na coluna 0... 
+03CA:  CLRF   41
+....................       break; 
+03CB:  GOTO   3F9
+....................       case 1: w=0x10; // Posiciona na coluna 1... 
+03CC:  MOVLW  10
+03CD:  MOVWF  41
+....................       break; 
+03CE:  GOTO   3F9
+....................       case 2: w=0x20; // Posiciona na coluna 2... 
+03CF:  MOVLW  20
+03D0:  MOVWF  41
+....................       break; 
+03D1:  GOTO   3F9
+....................       case 3: w=0x30; // Posiciona na coluna 3... 
+03D2:  MOVLW  30
+03D3:  MOVWF  41
+....................       break; 
+03D4:  GOTO   3F9
+....................       case 4: w=0x40; // Posiciona na coluna 4... 
+03D5:  MOVLW  40
+03D6:  MOVWF  41
+....................       break; 
+03D7:  GOTO   3F9
+....................       case 5: w=0x50; // Posiciona na coluna 5... 
+03D8:  MOVLW  50
+03D9:  MOVWF  41
+....................       break; 
+03DA:  GOTO   3F9
+....................       case 6: w=0x60; // Posiciona na coluna 6... 
+03DB:  MOVLW  60
+03DC:  MOVWF  41
+....................       break; 
+03DD:  GOTO   3F9
+....................       case 7: w=0x70; // Posiciona na coluna 7... 
+03DE:  MOVLW  70
+03DF:  MOVWF  41
+....................       break; 
+03E0:  GOTO   3F9
+....................       case 8: w=0x80; // Posiciona na coluna 8... 
+03E1:  MOVLW  80
+03E2:  MOVWF  41
+....................       break; 
+03E3:  GOTO   3F9
+....................       case 9: w=0x90; // Posiciona na coluna 9... 
+03E4:  MOVLW  90
+03E5:  MOVWF  41
+....................       break; 
+03E6:  GOTO   3F9
+....................       case 10: w=0xA0; // Posiciona na coluna 10... 
+03E7:  MOVLW  A0
+03E8:  MOVWF  41
+....................       break; 
+03E9:  GOTO   3F9
+....................       case 11: w=0xB0; // Posiciona na coluna 11... 
+03EA:  MOVLW  B0
+03EB:  MOVWF  41
+....................       break; 
+03EC:  GOTO   3F9
+....................       case 12: w=0xC0; // Posiciona na coluna 12... 
+03ED:  MOVLW  C0
+03EE:  MOVWF  41
+....................       break; 
+03EF:  GOTO   3F9
+....................       case 13: w=0xD0; // Posiciona na coluna 13... 
+03F0:  MOVLW  D0
+03F1:  MOVWF  41
+....................       break; 
+03F2:  GOTO   3F9
+....................       case 14: w=0xE0; // Posiciona na coluna 14... 
+03F3:  MOVLW  E0
+03F4:  MOVWF  41
+....................       break; 
+03F5:  GOTO   3F9
+....................       case 15: w=0xF0; // Posiciona na coluna 15... 
+03F6:  MOVLW  F0
+03F7:  MOVWF  41
+....................       break; 
+03F8:  GOTO   3F9
+....................    } 
+....................    output_d(z); 
+03F9:  BSF    03.5
+03FA:  CLRF   08
+03FB:  BCF    03.5
+03FC:  MOVF   40,W
+03FD:  MOVWF  08
+....................    pulso(); 
+03FE:  CALL   31F
+....................    output_d(w); 
+03FF:  BSF    03.5
+0400:  CLRF   08
+0401:  BCF    03.5
+0402:  MOVF   41,W
+0403:  MOVWF  08
+....................    pulso(); 
+0404:  CALL   31F
+....................    delay_us(40); // Envia o comando para o LCD e espera 40 us para resposta do display... 
+0405:  MOVLW  0D
+0406:  MOVWF  77
+0407:  DECFSZ 77,F
+0408:  GOTO   407
+.................... } 
+0409:  RETLW  00
+....................  
+.................... void escreve(char x)   
+.................... { 
+....................    char y; // Variável temporária local... 
+....................    y=x<<4; // Separa o caracter em dois nibbles... 
+*
+041E:  SWAPF  3F,W
+041F:  MOVWF  40
+0420:  MOVLW  F0
+0421:  ANDWF  40,F
+....................    output_high(PIN_C4); // Seleciona display para dados... 
+0422:  BCF    3B.4
+0423:  MOVF   3B,W
+0424:  BSF    03.5
+0425:  MOVWF  07
+0426:  BCF    03.5
+0427:  BSF    07.4
+....................    output_d(x); 
+0428:  BSF    03.5
+0429:  CLRF   08
+042A:  BCF    03.5
+042B:  MOVF   3F,W
+042C:  MOVWF  08
+....................    pulso(); 
+042D:  CALL   31F
+....................    output_d(y); 
+042E:  BSF    03.5
+042F:  CLRF   08
+0430:  BCF    03.5
+0431:  MOVF   40,W
+0432:  MOVWF  08
+....................    pulso(); 
+0433:  CALL   31F
+....................    delay_us(40); // Envia o dado para o LCD e espera 40 us para resposta do display... 
+0434:  MOVLW  0D
+0435:  MOVWF  77
+0436:  DECFSZ 77,F
+0437:  GOTO   436
+.................... } 
+0438:  RETLW  00
+....................  
+.................... void lcd_ini()  
+.................... { 
+....................    delay_ms(15); // Espera 15 ms para energização do display e do seu controlador... 
+*
+0330:  MOVLW  0F
+0331:  MOVWF  3F
+0332:  CALL   30A
+....................    output_low(PIN_C7); // Reseta pino de "Enable" do LCD... 
+0333:  BCF    3B.7
+0334:  MOVF   3B,W
+0335:  BSF    03.5
+0336:  MOVWF  07
+0337:  BCF    03.5
+0338:  BCF    07.7
+....................    output_low(PIN_C4); // Seleciona display para comandos... 
+0339:  BCF    3B.4
+033A:  MOVF   3B,W
+033B:  BSF    03.5
+033C:  MOVWF  07
+033D:  BCF    03.5
+033E:  BCF    07.4
+....................    output_d(0x30); // Envia comando 0x30 para o LCD... 
+033F:  BSF    03.5
+0340:  CLRF   08
+0341:  MOVLW  30
+0342:  BCF    03.5
+0343:  MOVWF  08
+....................    pulso(); 
+0344:  CALL   31F
+....................    delay_ms(4); // Aguarda 4 ms para garantir o término da operação... 
+0345:  MOVLW  04
+0346:  MOVWF  3F
+0347:  CALL   30A
+....................    pulso(); // Reenvia comando 0x30 para o LCD... 
+0348:  CALL   31F
+....................    delay_us(100); // Aguarda 100 us... 
+0349:  MOVLW  21
+034A:  MOVWF  77
+034B:  DECFSZ 77,F
+034C:  GOTO   34B
+....................    pulso(); // Reenvia comando 0x30 para o LCD... 
+034D:  CALL   31F
+....................    delay_us(40); // Aguarda 40 us... 
+034E:  MOVLW  0D
+034F:  MOVWF  77
+0350:  DECFSZ 77,F
+0351:  GOTO   350
+....................    output_d(0x20); // Estabele comunicação em 4 vias... 
+0352:  BSF    03.5
+0353:  CLRF   08
+0354:  MOVLW  20
+0355:  BCF    03.5
+0356:  MOVWF  08
+....................    pulso(); 
+0357:  CALL   31F
+....................    delay_us(40); // Espera 40 us... 
+0358:  MOVLW  0D
+0359:  MOVWF  77
+035A:  DECFSZ 77,F
+035B:  GOTO   35A
+....................    output_d(0x20); // Como a comunicação é de 4 vias envia-se o nibble mais significativo primeiro... 
+035C:  BSF    03.5
+035D:  CLRF   08
+035E:  MOVLW  20
+035F:  BCF    03.5
+0360:  MOVWF  08
+....................    pulso(); 
+0361:  CALL   31F
+....................    output_d(0x80); // Estabelece condições de utilização: display de 2 linhas e matriz 7X5... 
+0362:  BSF    03.5
+0363:  CLRF   08
+0364:  MOVLW  80
+0365:  BCF    03.5
+0366:  MOVWF  08
+....................    pulso(); 
+0367:  CALL   31F
+....................    delay_us(40); // Aguarda 40 us... 
+0368:  MOVLW  0D
+0369:  MOVWF  77
+036A:  DECFSZ 77,F
+036B:  GOTO   36A
+....................    output_d(0x00); 
+036C:  BSF    03.5
+036D:  CLRF   08
+036E:  BCF    03.5
+036F:  CLRF   08
+....................    pulso(); 
+0370:  CALL   31F
+....................    output_d(0x10); // Limpa o display (iqual função "limpa()")... 
+0371:  BSF    03.5
+0372:  CLRF   08
+0373:  MOVLW  10
+0374:  BCF    03.5
+0375:  MOVWF  08
+....................    pulso(); 
+0376:  CALL   31F
+....................    delay_ms(2); // Aguarda 2 ms... 
+0377:  MOVLW  02
+0378:  MOVWF  3F
+0379:  CALL   30A
+....................    output_d(0x00); 
+037A:  BSF    03.5
+037B:  CLRF   08
+037C:  BCF    03.5
+037D:  CLRF   08
+....................    pulso(); 
+037E:  CALL   31F
+....................    output_d(0xC0); // Comando para ligar display sem cursor... 
+037F:  BSF    03.5
+0380:  CLRF   08
+0381:  MOVLW  C0
+0382:  BCF    03.5
+0383:  MOVWF  08
+....................    pulso(); 
+0384:  CALL   31F
+....................    delay_us(40); // Aguarda 40 us... 
+0385:  MOVLW  0D
+0386:  MOVWF  77
+0387:  DECFSZ 77,F
+0388:  GOTO   387
+....................    output_d(0x00); 
+0389:  BSF    03.5
+038A:  CLRF   08
+038B:  BCF    03.5
+038C:  CLRF   08
+....................    pulso(); 
+038D:  CALL   31F
+....................    output_d(0x60); // Estabelece modo de operação: Deslocamento automático do cursor para direita... 
+038E:  BSF    03.5
+038F:  CLRF   08
+0390:  MOVLW  60
+0391:  BCF    03.5
+0392:  MOVWF  08
+....................    pulso(); 
+0393:  CALL   31F
+....................    delay_us(40); // Aguarda 40 us... 
+0394:  MOVLW  0D
+0395:  MOVWF  77
+0396:  DECFSZ 77,F
+0397:  GOTO   396
+.................... } 
+0398:  BSF    0A.3
+0399:  BCF    0A.4
+039A:  GOTO   443 (RETURN)
+....................  
+.................... void abrir() 
+.................... { 
+.................... if ((logado)==(1))  
+*
+0525:  BTFSS  39.1
+0526:  GOTO   615
+.................... { 
+....................     posicao(0,0); 
+0527:  CLRF   3E
+0528:  CLRF   3F
+0529:  CALL   3B0
+....................     escreve("    ABRINDO      "); 
+052A:  CLRF   3E
+052B:  MOVF   3E,W
+052C:  CALL   035
+052D:  IORLW  00
+052E:  BTFSC  03.2
+052F:  GOTO   534
+0530:  INCF   3E,F
+0531:  MOVWF  3F
+0532:  CALL   41E
+0533:  GOTO   52B
+....................     posicao (0,1); 
+0534:  CLRF   3E
+0535:  MOVLW  01
+0536:  MOVWF  3F
+0537:  CALL   3B0
+....................     escreve("                "); 
+0538:  CLRF   3E
+0539:  MOVF   3E,W
+053A:  CALL   04B
+053B:  IORLW  00
+053C:  BTFSC  03.2
+053D:  GOTO   542
+053E:  INCF   3E,F
+053F:  MOVWF  3F
+0540:  CALL   41E
+0541:  GOTO   539
+....................     (output_high(pin_c5)); 
+0542:  BCF    3B.5
+0543:  MOVF   3B,W
+0544:  BSF    03.5
+0545:  MOVWF  07
+0546:  BCF    03.5
+0547:  BSF    07.5
+....................     delay_ms(300); 
+0548:  MOVLW  02
+0549:  MOVWF  3E
+054A:  MOVLW  96
+054B:  MOVWF  3F
+054C:  CALL   30A
+054D:  DECFSZ 3E,F
+054E:  GOTO   54A
+....................     posicao (0,1); 
+054F:  CLRF   3E
+0550:  MOVLW  01
+0551:  MOVWF  3F
+0552:  CALL   3B0
+....................     escreve(".               "); 
+0553:  CLRF   3E
+0554:  MOVF   3E,W
+0555:  CALL   060
+0556:  IORLW  00
+0557:  BTFSC  03.2
+0558:  GOTO   55D
+0559:  INCF   3E,F
+055A:  MOVWF  3F
+055B:  CALL   41E
+055C:  GOTO   554
+....................     (output_low(pin_c5)); 
+055D:  BCF    3B.5
+055E:  MOVF   3B,W
+055F:  BSF    03.5
+0560:  MOVWF  07
+0561:  BCF    03.5
+0562:  BCF    07.5
+....................     delay_ms(300); 
+0563:  MOVLW  02
+0564:  MOVWF  3E
+0565:  MOVLW  96
+0566:  MOVWF  3F
+0567:  CALL   30A
+0568:  DECFSZ 3E,F
+0569:  GOTO   565
+....................     posicao (0,1); 
+056A:  CLRF   3E
+056B:  MOVLW  01
+056C:  MOVWF  3F
+056D:  CALL   3B0
+....................     escreve("..              "); 
+056E:  CLRF   3E
+056F:  MOVF   3E,W
+0570:  CALL   075
+0571:  IORLW  00
+0572:  BTFSC  03.2
+0573:  GOTO   578
+0574:  INCF   3E,F
+0575:  MOVWF  3F
+0576:  CALL   41E
+0577:  GOTO   56F
+....................     (output_high(pin_c5)); 
+0578:  BCF    3B.5
+0579:  MOVF   3B,W
+057A:  BSF    03.5
+057B:  MOVWF  07
+057C:  BCF    03.5
+057D:  BSF    07.5
+....................     delay_ms(300); 
+057E:  MOVLW  02
+057F:  MOVWF  3E
+0580:  MOVLW  96
+0581:  MOVWF  3F
+0582:  CALL   30A
+0583:  DECFSZ 3E,F
+0584:  GOTO   580
+....................     posicao (0,1); 
+0585:  CLRF   3E
+0586:  MOVLW  01
+0587:  MOVWF  3F
+0588:  CALL   3B0
+....................     escreve("...             "); 
+0589:  CLRF   3E
+058A:  MOVF   3E,W
+058B:  CALL   08A
+058C:  IORLW  00
+058D:  BTFSC  03.2
+058E:  GOTO   593
+058F:  INCF   3E,F
+0590:  MOVWF  3F
+0591:  CALL   41E
+0592:  GOTO   58A
+....................     (output_low(pin_c5)); 
+0593:  BCF    3B.5
+0594:  MOVF   3B,W
+0595:  BSF    03.5
+0596:  MOVWF  07
+0597:  BCF    03.5
+0598:  BCF    07.5
+....................     delay_ms(300); 
+0599:  MOVLW  02
+059A:  MOVWF  3E
+059B:  MOVLW  96
+059C:  MOVWF  3F
+059D:  CALL   30A
+059E:  DECFSZ 3E,F
+059F:  GOTO   59B
+....................     (output_high(pin_c5)); 
+05A0:  BCF    3B.5
+05A1:  MOVF   3B,W
+05A2:  BSF    03.5
+05A3:  MOVWF  07
+05A4:  BCF    03.5
+05A5:  BSF    07.5
+....................     escreve("                "); 
+05A6:  CLRF   3E
+05A7:  MOVF   3E,W
+05A8:  CALL   04B
+05A9:  IORLW  00
+05AA:  BTFSC  03.2
+05AB:  GOTO   5B0
+05AC:  INCF   3E,F
+05AD:  MOVWF  3F
+05AE:  CALL   41E
+05AF:  GOTO   5A7
+....................     if (input(pin_b0)) 
+05B0:  BSF    03.5
+05B1:  BSF    06.0
+05B2:  BCF    03.5
+05B3:  BTFSS  06.0
+05B4:  GOTO   5C1
+....................     { 
+....................     (output_high(pin_c0)); 
+05B5:  BCF    3B.0
+05B6:  MOVF   3B,W
+05B7:  BSF    03.5
+05B8:  MOVWF  07
+05B9:  BCF    03.5
+05BA:  BSF    07.0
+....................     (output_low(pin_c1)); 
+05BB:  BCF    3B.1
+05BC:  MOVF   3B,W
+05BD:  BSF    03.5
+05BE:  MOVWF  07
+05BF:  BCF    03.5
+05C0:  BCF    07.1
+....................     } 
+....................     if (!input(pin_b0)) 
+05C1:  BSF    03.5
+05C2:  BSF    06.0
+05C3:  BCF    03.5
+05C4:  BTFSC  06.0
+05C5:  GOTO   615
+....................     { 
+....................     posicao(0,0); 
+05C6:  CLRF   3E
+05C7:  CLRF   3F
+05C8:  CALL   3B0
+....................     escreve(" PORTAL ABERTO "); 
+05C9:  CLRF   3E
+05CA:  MOVF   3E,W
+05CB:  CALL   09F
+05CC:  IORLW  00
+05CD:  BTFSC  03.2
+05CE:  GOTO   5D3
+05CF:  INCF   3E,F
+05D0:  MOVWF  3F
+05D1:  CALL   41E
+05D2:  GOTO   5CA
+....................     delay_ms(600); 
+05D3:  MOVLW  03
+05D4:  MOVWF  3E
+05D5:  MOVLW  C8
+05D6:  MOVWF  3F
+05D7:  CALL   30A
+05D8:  DECFSZ 3E,F
+05D9:  GOTO   5D5
+....................     escreve("                "); 
+05DA:  CLRF   3E
+05DB:  MOVF   3E,W
+05DC:  CALL   04B
+05DD:  IORLW  00
+05DE:  BTFSC  03.2
+05DF:  GOTO   5E4
+05E0:  INCF   3E,F
+05E1:  MOVWF  3F
+05E2:  CALL   41E
+05E3:  GOTO   5DB
+....................     delay_ms(600); 
+05E4:  MOVLW  03
+05E5:  MOVWF  3E
+05E6:  MOVLW  C8
+05E7:  MOVWF  3F
+05E8:  CALL   30A
+05E9:  DECFSZ 3E,F
+05EA:  GOTO   5E6
+....................     posicao(0,1); 
+05EB:  CLRF   3E
+05EC:  MOVLW  01
+05ED:  MOVWF  3F
+05EE:  CALL   3B0
+....................     escreve(" PORTAL ABERTO "); 
+05EF:  CLRF   3E
+05F0:  MOVF   3E,W
+05F1:  CALL   09F
+05F2:  IORLW  00
+05F3:  BTFSC  03.2
+05F4:  GOTO   5F9
+05F5:  INCF   3E,F
+05F6:  MOVWF  3F
+05F7:  CALL   41E
+05F8:  GOTO   5F0
+....................     delay_ms(600); 
+05F9:  MOVLW  03
+05FA:  MOVWF  3E
+05FB:  MOVLW  C8
+05FC:  MOVWF  3F
+05FD:  CALL   30A
+05FE:  DECFSZ 3E,F
+05FF:  GOTO   5FB
+....................     posicao(0,1); 
+0600:  CLRF   3E
+0601:  MOVLW  01
+0602:  MOVWF  3F
+0603:  CALL   3B0
+....................     escreve("                "); 
+0604:  CLRF   3E
+0605:  MOVF   3E,W
+0606:  CALL   04B
+0607:  IORLW  00
+0608:  BTFSC  03.2
+0609:  GOTO   60E
+060A:  INCF   3E,F
+060B:  MOVWF  3F
+060C:  CALL   41E
+060D:  GOTO   605
+....................     delay_ms(600); 
+060E:  MOVLW  03
+060F:  MOVWF  3E
+0610:  MOVLW  C8
+0611:  MOVWF  3F
+0612:  CALL   30A
+0613:  DECFSZ 3E,F
+0614:  GOTO   610
+....................     } 
+....................  
+.................... } 
+....................  menuprince=0;  
+0615:  CLRF   22
+....................  ir=0; 
+0616:  CLRF   21
+.................... } 
+0617:  RETLW  00
+....................  
+.................... void fechar() 
+.................... { 
+.................... if ((logado)==(1))  
+*
+0439:  BTFSS  39.1
+043A:  GOTO   522
+.................... { 
+....................     posicao(0,0); 
+043B:  CLRF   3E
+043C:  CLRF   3F
+043D:  CALL   3B0
+....................     escreve("   FECHANDO     "); 
+043E:  CLRF   3E
+043F:  MOVF   3E,W
+0440:  CALL   0B3
+0441:  IORLW  00
+0442:  BTFSC  03.2
+0443:  GOTO   448
+0444:  INCF   3E,F
+0445:  MOVWF  3F
+0446:  CALL   41E
+0447:  GOTO   43F
+....................     posicao (0,1); 
+0448:  CLRF   3E
+0449:  MOVLW  01
+044A:  MOVWF  3F
+044B:  CALL   3B0
+....................     escreve(".               "); 
+044C:  CLRF   3E
+044D:  MOVF   3E,W
+044E:  CALL   060
+044F:  IORLW  00
+0450:  BTFSC  03.2
+0451:  GOTO   456
+0452:  INCF   3E,F
+0453:  MOVWF  3F
+0454:  CALL   41E
+0455:  GOTO   44D
+....................     (output_low(pin_c5)); 
+0456:  BCF    3B.5
+0457:  MOVF   3B,W
+0458:  BSF    03.5
+0459:  MOVWF  07
+045A:  BCF    03.5
+045B:  BCF    07.5
+....................     delay_ms(300); 
+045C:  MOVLW  02
+045D:  MOVWF  3E
+045E:  MOVLW  96
+045F:  MOVWF  3F
+0460:  CALL   30A
+0461:  DECFSZ 3E,F
+0462:  GOTO   45E
+....................     posicao (0,1); 
+0463:  CLRF   3E
+0464:  MOVLW  01
+0465:  MOVWF  3F
+0466:  CALL   3B0
+....................     escreve("..              "); 
+0467:  CLRF   3E
+0468:  MOVF   3E,W
+0469:  CALL   075
+046A:  IORLW  00
+046B:  BTFSC  03.2
+046C:  GOTO   471
+046D:  INCF   3E,F
+046E:  MOVWF  3F
+046F:  CALL   41E
+0470:  GOTO   468
+....................     (output_high(pin_c5)); 
+0471:  BCF    3B.5
+0472:  MOVF   3B,W
+0473:  BSF    03.5
+0474:  MOVWF  07
+0475:  BCF    03.5
+0476:  BSF    07.5
+....................     delay_ms(300); 
+0477:  MOVLW  02
+0478:  MOVWF  3E
+0479:  MOVLW  96
+047A:  MOVWF  3F
+047B:  CALL   30A
+047C:  DECFSZ 3E,F
+047D:  GOTO   479
+....................     posicao (0,1); 
+047E:  CLRF   3E
+047F:  MOVLW  01
+0480:  MOVWF  3F
+0481:  CALL   3B0
+....................     escreve("...             "); 
+0482:  CLRF   3E
+0483:  MOVF   3E,W
+0484:  CALL   08A
+0485:  IORLW  00
+0486:  BTFSC  03.2
+0487:  GOTO   48C
+0488:  INCF   3E,F
+0489:  MOVWF  3F
+048A:  CALL   41E
+048B:  GOTO   483
+....................     (output_low(pin_c5)); 
+048C:  BCF    3B.5
+048D:  MOVF   3B,W
+048E:  BSF    03.5
+048F:  MOVWF  07
+0490:  BCF    03.5
+0491:  BCF    07.5
+....................     delay_ms(300); 
+0492:  MOVLW  02
+0493:  MOVWF  3E
+0494:  MOVLW  96
+0495:  MOVWF  3F
+0496:  CALL   30A
+0497:  DECFSZ 3E,F
+0498:  GOTO   494
+....................     posicao (0,1); 
+0499:  CLRF   3E
+049A:  MOVLW  01
+049B:  MOVWF  3F
+049C:  CALL   3B0
+....................     escreve("                "); 
+049D:  CLRF   3E
+049E:  MOVF   3E,W
+049F:  CALL   04B
+04A0:  IORLW  00
+04A1:  BTFSC  03.2
+04A2:  GOTO   4A7
+04A3:  INCF   3E,F
+04A4:  MOVWF  3F
+04A5:  CALL   41E
+04A6:  GOTO   49E
+....................     (output_high(pin_c5)); 
+04A7:  BCF    3B.5
+04A8:  MOVF   3B,W
+04A9:  BSF    03.5
+04AA:  MOVWF  07
+04AB:  BCF    03.5
+04AC:  BSF    07.5
+....................     delay_ms(300); 
+04AD:  MOVLW  02
+04AE:  MOVWF  3E
+04AF:  MOVLW  96
+04B0:  MOVWF  3F
+04B1:  CALL   30A
+04B2:  DECFSZ 3E,F
+04B3:  GOTO   4AF
+....................     (output_low(pin_c5)); 
+04B4:  BCF    3B.5
+04B5:  MOVF   3B,W
+04B6:  BSF    03.5
+04B7:  MOVWF  07
+04B8:  BCF    03.5
+04B9:  BCF    07.5
+....................     if (input(pin_b2)) 
+04BA:  BSF    03.5
+04BB:  BSF    06.2
+04BC:  BCF    03.5
+04BD:  BTFSS  06.2
+04BE:  GOTO   4CB
+....................     { 
+....................     (output_high(pin_c1)); 
+04BF:  BCF    3B.1
+04C0:  MOVF   3B,W
+04C1:  BSF    03.5
+04C2:  MOVWF  07
+04C3:  BCF    03.5
+04C4:  BSF    07.1
+....................     (output_low(pin_c0)); 
+04C5:  BCF    3B.0
+04C6:  MOVF   3B,W
+04C7:  BSF    03.5
+04C8:  MOVWF  07
+04C9:  BCF    03.5
+04CA:  BCF    07.0
+....................     } 
+....................     if (!input(pin_b2)) 
+04CB:  BSF    03.5
+04CC:  BSF    06.2
+04CD:  BCF    03.5
+04CE:  BTFSC  06.2
+04CF:  GOTO   522
+....................     { 
+....................     posicao(0,0); 
+04D0:  CLRF   3E
+04D1:  CLRF   3F
+04D2:  CALL   3B0
+....................     escreve(" PORTAL FECHADO "); 
+04D3:  CLRF   3E
+04D4:  MOVF   3E,W
+04D5:  CALL   0C8
+04D6:  IORLW  00
+04D7:  BTFSC  03.2
+04D8:  GOTO   4DD
+04D9:  INCF   3E,F
+04DA:  MOVWF  3F
+04DB:  CALL   41E
+04DC:  GOTO   4D4
+....................     delay_ms(600); 
+04DD:  MOVLW  03
+04DE:  MOVWF  3E
+04DF:  MOVLW  C8
+04E0:  MOVWF  3F
+04E1:  CALL   30A
+04E2:  DECFSZ 3E,F
+04E3:  GOTO   4DF
+....................     posicao(0,0); 
+04E4:  CLRF   3E
+04E5:  CLRF   3F
+04E6:  CALL   3B0
+....................     escreve("                "); 
+04E7:  CLRF   3E
+04E8:  MOVF   3E,W
+04E9:  CALL   04B
+04EA:  IORLW  00
+04EB:  BTFSC  03.2
+04EC:  GOTO   4F1
+04ED:  INCF   3E,F
+04EE:  MOVWF  3F
+04EF:  CALL   41E
+04F0:  GOTO   4E8
+....................     delay_ms(600); 
+04F1:  MOVLW  03
+04F2:  MOVWF  3E
+04F3:  MOVLW  C8
+04F4:  MOVWF  3F
+04F5:  CALL   30A
+04F6:  DECFSZ 3E,F
+04F7:  GOTO   4F3
+....................     posicao(0,1); 
+04F8:  CLRF   3E
+04F9:  MOVLW  01
+04FA:  MOVWF  3F
+04FB:  CALL   3B0
+....................     escreve(" PORTAL FECHADO "); 
+04FC:  CLRF   3E
+04FD:  MOVF   3E,W
+04FE:  CALL   0C8
+04FF:  IORLW  00
+0500:  BTFSC  03.2
+0501:  GOTO   506
+0502:  INCF   3E,F
+0503:  MOVWF  3F
+0504:  CALL   41E
+0505:  GOTO   4FD
+....................     delay_ms(600); 
+0506:  MOVLW  03
+0507:  MOVWF  3E
+0508:  MOVLW  C8
+0509:  MOVWF  3F
+050A:  CALL   30A
+050B:  DECFSZ 3E,F
+050C:  GOTO   508
+....................     posicao(0,1); 
+050D:  CLRF   3E
+050E:  MOVLW  01
+050F:  MOVWF  3F
+0510:  CALL   3B0
+....................     escreve("                "); 
+0511:  CLRF   3E
+0512:  MOVF   3E,W
+0513:  CALL   04B
+0514:  IORLW  00
+0515:  BTFSC  03.2
+0516:  GOTO   51B
+0517:  INCF   3E,F
+0518:  MOVWF  3F
+0519:  CALL   41E
+051A:  GOTO   512
+....................     delay_ms(600); 
+051B:  MOVLW  03
+051C:  MOVWF  3E
+051D:  MOVLW  C8
+051E:  MOVWF  3F
+051F:  CALL   30A
+0520:  DECFSZ 3E,F
+0521:  GOTO   51D
+....................     } 
+.................... } 
+....................  
+.................... menuprince=0; 
+0522:  CLRF   22
+.................... ir=0; 
+0523:  CLRF   21
+.................... } 
+0524:  RETLW  00
+....................  
+.................... void comandos() 
+.................... { 
+....................    
+....................     
+....................   if ((logado)==(0)) 
+*
+076B:  BTFSC  39.1
+076C:  GOTO   76F
+....................    { 
+....................    menuprince=0; 
+076D:  CLRF   22
+....................    ir=0; 
+076E:  CLRF   21
+....................    } 
+....................    
+....................   if ((logado)==(1)) 
+076F:  BTFSS  39.1
+0770:  GOTO   7C4
+....................   { 
+....................    
+....................    posicao (0,0); 
+0771:  CLRF   3E
+0772:  CLRF   3F
+0773:  CALL   3B0
+....................    escreve (" Abrir    Fechar   "); 
+0774:  CLRF   3E
+0775:  MOVF   3E,W
+0776:  CALL   0DD
+0777:  IORLW  00
+0778:  BTFSC  03.2
+0779:  GOTO   77E
+077A:  INCF   3E,F
+077B:  MOVWF  3F
+077C:  CALL   41E
+077D:  GOTO   775
+....................    
+....................     if ((comandar)==0) 
+077E:  BTFSC  38.1
+077F:  GOTO   795
+....................     { 
+....................     posicao (0,1); 
+0780:  CLRF   3E
+0781:  MOVLW  01
+0782:  MOVWF  3F
+0783:  CALL   3B0
+....................     escreve (" ^               "); 
+0784:  CLRF   3E
+0785:  MOVF   3E,W
+0786:  CALL   0F5
+0787:  IORLW  00
+0788:  BTFSC  03.2
+0789:  GOTO   78E
+078A:  INCF   3E,F
+078B:  MOVWF  3F
+078C:  CALL   41E
+078D:  GOTO   785
+....................     if (((entra)==(1))&&((click)==(0))) 
+078E:  BTFSS  38.5
+078F:  GOTO   795
+0790:  BTFSC  38.2
+0791:  GOTO   795
+....................     { 
+....................     entra=0; 
+0792:  BCF    38.5
+....................     click=1; 
+0793:  BSF    38.2
+....................     abrir(); 
+0794:  CALL   525
+....................      
+....................     } 
+....................     } 
+....................      
+....................     if ((comandar)==1) 
+0795:  BTFSS  38.1
+0796:  GOTO   7AC
+....................     { 
+....................     posicao (0,1); 
+0797:  CLRF   3E
+0798:  MOVLW  01
+0799:  MOVWF  3F
+079A:  CALL   3B0
+....................     escreve ("          ^      "); 
+079B:  CLRF   3E
+079C:  MOVF   3E,W
+079D:  CALL   10E
+079E:  IORLW  00
+079F:  BTFSC  03.2
+07A0:  GOTO   7A5
+07A1:  INCF   3E,F
+07A2:  MOVWF  3F
+07A3:  CALL   41E
+07A4:  GOTO   79C
+....................     if (((entra)==(1))&&((click)==(0))) 
+07A5:  BTFSS  38.5
+07A6:  GOTO   7AC
+07A7:  BTFSC  38.2
+07A8:  GOTO   7AC
+....................     { 
+....................     entra=0; 
+07A9:  BCF    38.5
+....................     click=1; 
+07AA:  BSF    38.2
+....................     fechar(); 
+07AB:  CALL   439
+....................      
+....................     } 
+....................     } 
+....................        
+....................     if (((direita)==(1))&&(click==(0))) 
+07AC:  BTFSS  38.4
+07AD:  GOTO   7B4
+07AE:  BTFSC  38.2
+07AF:  GOTO   7B4
+....................      { 
+....................      comandar++; 
+07B0:  MOVLW  02
+07B1:  XORWF  38,F
+....................      click=1; 
+07B2:  BSF    38.2
+....................      direita=0; 
+07B3:  BCF    38.4
+....................      } 
+....................       
+....................      if (((sai)==(1))&&(click==(0))) 
+07B4:  BTFSS  38.6
+07B5:  GOTO   7BC
+07B6:  BTFSC  38.2
+07B7:  GOTO   7BC
+....................      { 
+....................      menuprince=0; 
+07B8:  CLRF   22
+....................      ir=0; 
+07B9:  CLRF   21
+....................      click=1; 
+07BA:  BSF    38.2
+....................      sai=0; 
+07BB:  BCF    38.6
+....................      } 
+....................    
+....................   if (((esquerda)==(1))&&(click==(0))) 
+07BC:  BTFSS  38.3
+07BD:  GOTO   7C4
+07BE:  BTFSC  38.2
+07BF:  GOTO   7C4
+....................      { 
+....................      comandar--; 
+07C0:  MOVLW  02
+07C1:  XORWF  38,F
+....................      click=1; 
+07C2:  BSF    38.2
+....................      esquerda=0; 
+07C3:  BCF    38.3
+....................      } 
+....................  
+....................   } 
+.................... } 
+07C4:  BSF    0A.3
+07C5:  BCF    0A.4
+07C6:  GOTO   5C3 (RETURN)
+....................  
+.................... void cadastro() 
+.................... { 
+.................... if ((logado)==(0)) 
+*
+0A58:  BTFSC  39.1
+0A59:  GOTO   25B
+.................... { 
+.................... menuprince=0; 
+0A5A:  CLRF   22
+.................... } 
+....................  
+.................... if ((sai)==(1)&&((click)==(0))) 
+0A5B:  BTFSS  38.6
+0A5C:  GOTO   262
+0A5D:  BTFSC  38.2
+0A5E:  GOTO   262
+....................   { 
+....................   sai=0; 
+0A5F:  BCF    38.6
+....................   click=1; 
+0A60:  BSF    38.2
+....................   menuprince=0; 
+0A61:  CLRF   22
+....................   } 
+....................    
+....................   if ((entra)==(1)&&((click)==(0))) 
+0A62:  BTFSS  38.5
+0A63:  GOTO   277
+0A64:  BTFSC  38.2
+0A65:  GOTO   277
+....................   { 
+....................   entra=0; 
+0A66:  BCF    38.5
+....................   click=1; 
+0A67:  BSF    38.2
+....................   ((senha1)=(car1)); 
+0A68:  MOVF   30,W
+0A69:  MOVWF  34
+....................   ((senha2)=(car2)); 
+0A6A:  MOVF   31,W
+0A6B:  MOVWF  35
+....................   ((senha3)=(car3)); 
+0A6C:  MOVF   32,W
+0A6D:  MOVWF  36
+....................   ((senha4)=(car4)); 
+0A6E:  MOVF   33,W
+0A6F:  MOVWF  37
+....................    
+....................   logado=0; 
+0A70:  BCF    39.1
+....................   menuprince=0; 
+0A71:  CLRF   22
+....................   ir=0;   
+0A72:  CLRF   21
+....................   car1=0; 
+0A73:  CLRF   30
+....................   car2=0; 
+0A74:  CLRF   31
+....................   car3=0; 
+0A75:  CLRF   32
+....................   car4=0; 
+0A76:  CLRF   33
+....................   } 
+....................    
+.................... if ((logado)==(1))  
+0A77:  BTFSS  39.1
+0A78:  GOTO   3DD
+.................... { 
+....................   if (((direita)==(1))&&(click==(0))) 
+0A79:  BTFSS  38.4
+0A7A:  GOTO   280
+0A7B:  BTFSC  38.2
+0A7C:  GOTO   280
+....................      { 
+....................      editando++; 
+0A7D:  INCF   2F,F
+....................      click=1; 
+0A7E:  BSF    38.2
+....................      direita=0; 
+0A7F:  BCF    38.4
+....................      } 
+....................    
+....................   if (((esquerda)==(1))&&(click==(0))) 
+0A80:  BTFSS  38.3
+0A81:  GOTO   287
+0A82:  BTFSC  38.2
+0A83:  GOTO   287
+....................      { 
+....................      editando--; 
+0A84:  DECF   2F,F
+....................      click=1; 
+0A85:  BSF    38.2
+....................      esquerda=0; 
+0A86:  BCF    38.3
+....................      } 
+....................   
+....................    posicao (0,0); 
+0A87:  CLRF   3E
+0A88:  CLRF   3F
+0A89:  BCF    0A.3
+0A8A:  CALL   3B0
+0A8B:  BSF    0A.3
+....................    escreve("Nova Senha:"); 
+0A8C:  CLRF   3E
+0A8D:  MOVF   3E,W
+0A8E:  BCF    0A.3
+0A8F:  CALL   124
+0A90:  BSF    0A.3
+0A91:  IORLW  00
+0A92:  BTFSC  03.2
+0A93:  GOTO   29A
+0A94:  INCF   3E,F
+0A95:  MOVWF  3F
+0A96:  BCF    0A.3
+0A97:  CALL   41E
+0A98:  BSF    0A.3
+0A99:  GOTO   28D
+....................    posicao (11,0); 
+0A9A:  MOVLW  0B
+0A9B:  MOVWF  3E
+0A9C:  CLRF   3F
+0A9D:  BCF    0A.3
+0A9E:  CALL   3B0
+0A9F:  BSF    0A.3
+....................    sprintf (buffer,"%01u",car1); 
+0AA0:  CLRF   3D
+0AA1:  MOVLW  3A
+0AA2:  MOVWF  3C
+0AA3:  MOVF   30,W
+0AA4:  MOVWF  3E
+0AA5:  MOVLW  08
+0AA6:  MOVWF  3F
+0AA7:  BCF    0A.3
+0AA8:  CALL   736
+0AA9:  BSF    0A.3
+....................    escreve (buffer[0]); 
+0AAA:  MOVF   3A,W
+0AAB:  MOVWF  3F
+0AAC:  BCF    0A.3
+0AAD:  CALL   41E
+0AAE:  BSF    0A.3
+....................    posicao (12,0); 
+0AAF:  MOVLW  0C
+0AB0:  MOVWF  3E
+0AB1:  CLRF   3F
+0AB2:  BCF    0A.3
+0AB3:  CALL   3B0
+0AB4:  BSF    0A.3
+....................    sprintf(buffer,"%01u",car2);    
+0AB5:  CLRF   3D
+0AB6:  MOVLW  3A
+0AB7:  MOVWF  3C
+0AB8:  MOVF   31,W
+0AB9:  MOVWF  3E
+0ABA:  MOVLW  08
+0ABB:  MOVWF  3F
+0ABC:  BCF    0A.3
+0ABD:  CALL   736
+0ABE:  BSF    0A.3
+....................    escreve(buffer[0]); 
+0ABF:  MOVF   3A,W
+0AC0:  MOVWF  3F
+0AC1:  BCF    0A.3
+0AC2:  CALL   41E
+0AC3:  BSF    0A.3
+....................    posicao (13,0); 
+0AC4:  MOVLW  0D
+0AC5:  MOVWF  3E
+0AC6:  CLRF   3F
+0AC7:  BCF    0A.3
+0AC8:  CALL   3B0
+0AC9:  BSF    0A.3
+....................    sprintf(buffer,"%01u",car3);   
+0ACA:  CLRF   3D
+0ACB:  MOVLW  3A
+0ACC:  MOVWF  3C
+0ACD:  MOVF   32,W
+0ACE:  MOVWF  3E
+0ACF:  MOVLW  08
+0AD0:  MOVWF  3F
+0AD1:  BCF    0A.3
+0AD2:  CALL   736
+0AD3:  BSF    0A.3
+....................    escreve(buffer[0]); 
+0AD4:  MOVF   3A,W
+0AD5:  MOVWF  3F
+0AD6:  BCF    0A.3
+0AD7:  CALL   41E
+0AD8:  BSF    0A.3
+....................    posicao (14,0); 
+0AD9:  MOVLW  0E
+0ADA:  MOVWF  3E
+0ADB:  CLRF   3F
+0ADC:  BCF    0A.3
+0ADD:  CALL   3B0
+0ADE:  BSF    0A.3
+....................    sprintf(buffer,"%01u",car4);   
+0ADF:  CLRF   3D
+0AE0:  MOVLW  3A
+0AE1:  MOVWF  3C
+0AE2:  MOVF   33,W
+0AE3:  MOVWF  3E
+0AE4:  MOVLW  08
+0AE5:  MOVWF  3F
+0AE6:  BCF    0A.3
+0AE7:  CALL   736
+0AE8:  BSF    0A.3
+....................    escreve(buffer[0]); 
+0AE9:  MOVF   3A,W
+0AEA:  MOVWF  3F
+0AEB:  BCF    0A.3
+0AEC:  CALL   41E
+0AED:  BSF    0A.3
+....................    posicao (0,1); 
+0AEE:  CLRF   3E
+0AEF:  MOVLW  01
+0AF0:  MOVWF  3F
+0AF1:  BCF    0A.3
+0AF2:  CALL   3B0
+0AF3:  BSF    0A.3
+....................    escreve("           "); 
+0AF4:  CLRF   3E
+0AF5:  MOVF   3E,W
+0AF6:  BCF    0A.3
+0AF7:  CALL   134
+0AF8:  BSF    0A.3
+0AF9:  IORLW  00
+0AFA:  BTFSC  03.2
+0AFB:  GOTO   302
+0AFC:  INCF   3E,F
+0AFD:  MOVWF  3F
+0AFE:  BCF    0A.3
+0AFF:  CALL   41E
+0B00:  BSF    0A.3
+0B01:  GOTO   2F5
+....................    posicao (15,1); 
+0B02:  MOVLW  0F
+0B03:  MOVWF  3E
+0B04:  MOVLW  01
+0B05:  MOVWF  3F
+0B06:  BCF    0A.3
+0B07:  CALL   3B0
+0B08:  BSF    0A.3
+....................    escreve("  "); 
+0B09:  CLRF   3E
+0B0A:  MOVF   3E,W
+0B0B:  BCF    0A.3
+0B0C:  CALL   144
+0B0D:  BSF    0A.3
+0B0E:  IORLW  00
+0B0F:  BTFSC  03.2
+0B10:  GOTO   317
+0B11:  INCF   3E,F
+0B12:  MOVWF  3F
+0B13:  BCF    0A.3
+0B14:  CALL   41E
+0B15:  BSF    0A.3
+0B16:  GOTO   30A
+....................  
+....................  
+....................    if ((editando)==(0)) 
+0B17:  MOVF   2F,F
+0B18:  BTFSS  03.2
+0B19:  GOTO   341
+....................    { 
+....................    if (((cima)==(1))&&((click)==(0))) 
+0B1A:  BTFSS  38.7
+0B1B:  GOTO   321
+0B1C:  BTFSC  38.2
+0B1D:  GOTO   321
+....................    { 
+....................    car1++; 
+0B1E:  INCF   30,F
+....................    click=1; 
+0B1F:  BSF    38.2
+....................    cima=0; 
+0B20:  BCF    38.7
+....................    } 
+....................    if (((baixo)==(1))&&((click)==(0))) 
+0B21:  BTFSS  39.0
+0B22:  GOTO   328
+0B23:  BTFSC  38.2
+0B24:  GOTO   328
+....................    { 
+....................    car1--; 
+0B25:  DECF   30,F
+....................    click=1; 
+0B26:  BSF    38.2
+....................    baixo=0; 
+0B27:  BCF    39.0
+....................    } 
+....................    if ((car1)==(255)) 
+0B28:  INCFSZ 30,W
+0B29:  GOTO   32C
+....................    { 
+....................    ((car1)=(9)); 
+0B2A:  MOVLW  09
+0B2B:  MOVWF  30
+....................    } 
+....................    posicao (11,1); 
+0B2C:  MOVLW  0B
+0B2D:  MOVWF  3E
+0B2E:  MOVLW  01
+0B2F:  MOVWF  3F
+0B30:  BCF    0A.3
+0B31:  CALL   3B0
+0B32:  BSF    0A.3
+....................    escreve ("^   "); 
+0B33:  CLRF   3E
+0B34:  MOVF   3E,W
+0B35:  BCF    0A.3
+0B36:  CALL   14B
+0B37:  BSF    0A.3
+0B38:  IORLW  00
+0B39:  BTFSC  03.2
+0B3A:  GOTO   341
+0B3B:  INCF   3E,F
+0B3C:  MOVWF  3F
+0B3D:  BCF    0A.3
+0B3E:  CALL   41E
+0B3F:  BSF    0A.3
+0B40:  GOTO   334
+....................    } 
+....................     
+....................     
+....................    if ((editando)==(1)) 
+0B41:  DECFSZ 2F,W
+0B42:  GOTO   36A
+....................    { 
+....................    if (((cima)==(1))&&((click)==(0))) 
+0B43:  BTFSS  38.7
+0B44:  GOTO   34A
+0B45:  BTFSC  38.2
+0B46:  GOTO   34A
+....................    { 
+....................    car2++; 
+0B47:  INCF   31,F
+....................    click=1; 
+0B48:  BSF    38.2
+....................    cima=0; 
+0B49:  BCF    38.7
+....................    } 
+....................    if (((baixo)==(1))&&((click)==(0))) 
+0B4A:  BTFSS  39.0
+0B4B:  GOTO   351
+0B4C:  BTFSC  38.2
+0B4D:  GOTO   351
+....................    { 
+....................    car2--; 
+0B4E:  DECF   31,F
+....................    click=1; 
+0B4F:  BSF    38.2
+....................    baixo=0; 
+0B50:  BCF    39.0
+....................    } 
+....................    if ((car2)==(255)) 
+0B51:  INCFSZ 31,W
+0B52:  GOTO   355
+....................    { 
+....................    ((car2)=(9)); 
+0B53:  MOVLW  09
+0B54:  MOVWF  31
+....................    } 
+....................    posicao (11,1); 
+0B55:  MOVLW  0B
+0B56:  MOVWF  3E
+0B57:  MOVLW  01
+0B58:  MOVWF  3F
+0B59:  BCF    0A.3
+0B5A:  CALL   3B0
+0B5B:  BSF    0A.3
+....................    escreve (" ^  "); 
+0B5C:  CLRF   3E
+0B5D:  MOVF   3E,W
+0B5E:  BCF    0A.3
+0B5F:  CALL   154
+0B60:  BSF    0A.3
+0B61:  IORLW  00
+0B62:  BTFSC  03.2
+0B63:  GOTO   36A
+0B64:  INCF   3E,F
+0B65:  MOVWF  3F
+0B66:  BCF    0A.3
+0B67:  CALL   41E
+0B68:  BSF    0A.3
+0B69:  GOTO   35D
+....................    } 
+....................     
+....................    if ((editando)==(2)) 
+0B6A:  MOVF   2F,W
+0B6B:  SUBLW  02
+0B6C:  BTFSS  03.2
+0B6D:  GOTO   395
+....................    { 
+....................    if (((baixo)==(1))&&((click)==(0))) 
+0B6E:  BTFSS  39.0
+0B6F:  GOTO   375
+0B70:  BTFSC  38.2
+0B71:  GOTO   375
+....................    { 
+....................    car3--; 
+0B72:  DECF   32,F
+....................    click=1; 
+0B73:  BSF    38.2
+....................    baixo=0; 
+0B74:  BCF    39.0
+....................    } 
+....................    if (((cima)==(1))&&((click)==(0))) 
+0B75:  BTFSS  38.7
+0B76:  GOTO   37C
+0B77:  BTFSC  38.2
+0B78:  GOTO   37C
+....................    { 
+....................    car3++; 
+0B79:  INCF   32,F
+....................    click=1; 
+0B7A:  BSF    38.2
+....................    cima=0; 
+0B7B:  BCF    38.7
+....................    } 
+....................    if ((car3)==(255)) 
+0B7C:  INCFSZ 32,W
+0B7D:  GOTO   380
+....................    { 
+....................    ((car3)=(9)); 
+0B7E:  MOVLW  09
+0B7F:  MOVWF  32
+....................    } 
+....................    posicao (11,1); 
+0B80:  MOVLW  0B
+0B81:  MOVWF  3E
+0B82:  MOVLW  01
+0B83:  MOVWF  3F
+0B84:  BCF    0A.3
+0B85:  CALL   3B0
+0B86:  BSF    0A.3
+....................    escreve ("  ^ "); 
+0B87:  CLRF   3E
+0B88:  MOVF   3E,W
+0B89:  BCF    0A.3
+0B8A:  CALL   15D
+0B8B:  BSF    0A.3
+0B8C:  IORLW  00
+0B8D:  BTFSC  03.2
+0B8E:  GOTO   395
+0B8F:  INCF   3E,F
+0B90:  MOVWF  3F
+0B91:  BCF    0A.3
+0B92:  CALL   41E
+0B93:  BSF    0A.3
+0B94:  GOTO   388
+....................    } 
+....................     
+....................    if ((editando)==(3)) 
+0B95:  MOVF   2F,W
+0B96:  SUBLW  03
+0B97:  BTFSS  03.2
+0B98:  GOTO   3C0
+....................    { 
+....................    if (((baixo)==(1))&&((click)==(0))) 
+0B99:  BTFSS  39.0
+0B9A:  GOTO   3A0
+0B9B:  BTFSC  38.2
+0B9C:  GOTO   3A0
+....................    { 
+....................    car4--; 
+0B9D:  DECF   33,F
+....................    click=1; 
+0B9E:  BSF    38.2
+....................    baixo=0; 
+0B9F:  BCF    39.0
+....................    } 
+....................    if (((cima)==(1))&&((click)==(0))) 
+0BA0:  BTFSS  38.7
+0BA1:  GOTO   3A7
+0BA2:  BTFSC  38.2
+0BA3:  GOTO   3A7
+....................    { 
+....................    car4++; 
+0BA4:  INCF   33,F
+....................    click=1; 
+0BA5:  BSF    38.2
+....................    cima=0; 
+0BA6:  BCF    38.7
+....................    } 
+....................    if ((car4)==(255)) 
+0BA7:  INCFSZ 33,W
+0BA8:  GOTO   3AB
+....................    { 
+....................    ((car4)=(9)); 
+0BA9:  MOVLW  09
+0BAA:  MOVWF  33
+....................    } 
+....................    posicao (11,1); 
+0BAB:  MOVLW  0B
+0BAC:  MOVWF  3E
+0BAD:  MOVLW  01
+0BAE:  MOVWF  3F
+0BAF:  BCF    0A.3
+0BB0:  CALL   3B0
+0BB1:  BSF    0A.3
+....................    escreve ("   ^"); 
+0BB2:  CLRF   3E
+0BB3:  MOVF   3E,W
+0BB4:  BCF    0A.3
+0BB5:  CALL   166
+0BB6:  BSF    0A.3
+0BB7:  IORLW  00
+0BB8:  BTFSC  03.2
+0BB9:  GOTO   3C0
+0BBA:  INCF   3E,F
+0BBB:  MOVWF  3F
+0BBC:  BCF    0A.3
+0BBD:  CALL   41E
+0BBE:  BSF    0A.3
+0BBF:  GOTO   3B3
+....................    } 
+....................     
+....................    if ((editando)==(4)) 
+0BC0:  MOVF   2F,W
+0BC1:  SUBLW  04
+0BC2:  BTFSS  03.2
+0BC3:  GOTO   3C5
+....................    { 
+....................    ((editando)=(0)); 
+0BC4:  CLRF   2F
+....................    } 
+....................     
+....................    if ((editando)==(255)) 
+0BC5:  INCFSZ 2F,W
+0BC6:  GOTO   3C9
+....................    { 
+....................    ((editando)=(3)); 
+0BC7:  MOVLW  03
+0BC8:  MOVWF  2F
+....................    }    
+....................  
+....................   if ((car1)>(9)) 
+0BC9:  MOVF   30,W
+0BCA:  SUBLW  09
+0BCB:  BTFSC  03.0
+0BCC:  GOTO   3CE
+....................   { 
+....................   car1=0; 
+0BCD:  CLRF   30
+....................   } 
+....................   if ((car2)>(9)) 
+0BCE:  MOVF   31,W
+0BCF:  SUBLW  09
+0BD0:  BTFSC  03.0
+0BD1:  GOTO   3D3
+....................   { 
+....................   car2=0; 
+0BD2:  CLRF   31
+....................   } 
+....................   if ((car3)>(9)) 
+0BD3:  MOVF   32,W
+0BD4:  SUBLW  09
+0BD5:  BTFSC  03.0
+0BD6:  GOTO   3D8
+....................   { 
+....................   car3=0; 
+0BD7:  CLRF   32
+....................   } 
+....................   if ((car4)>(9)) 
+0BD8:  MOVF   33,W
+0BD9:  SUBLW  09
+0BDA:  BTFSC  03.0
+0BDB:  GOTO   3DD
+....................   { 
+....................   car4=0; 
+0BDC:  CLRF   33
+....................   }  
+....................  
+....................  
+.................... } 
+.................... } 
+0BDD:  BSF    0A.3
+0BDE:  BCF    0A.4
+0BDF:  GOTO   5C9 (RETURN)
+....................  
+.................... void verificar() 
+.................... { 
+....................    posicao (0,0); 
+*
+0814:  CLRF   3E
+0815:  CLRF   3F
+0816:  BCF    0A.3
+0817:  CALL   3B0
+0818:  BSF    0A.3
+....................    escreve ("verificando.    "); 
+0819:  CLRF   3E
+081A:  MOVF   3E,W
+081B:  BCF    0A.3
+081C:  CALL   16F
+081D:  BSF    0A.3
+081E:  IORLW  00
+081F:  BTFSC  03.2
+0820:  GOTO   027
+0821:  INCF   3E,F
+0822:  MOVWF  3F
+0823:  BCF    0A.3
+0824:  CALL   41E
+0825:  BSF    0A.3
+0826:  GOTO   01A
+....................    posicao (0,1); 
+0827:  CLRF   3E
+0828:  MOVLW  01
+0829:  MOVWF  3F
+082A:  BCF    0A.3
+082B:  CALL   3B0
+082C:  BSF    0A.3
+....................    escreve ("                "); 
+082D:  CLRF   3E
+082E:  MOVF   3E,W
+082F:  BCF    0A.3
+0830:  CALL   04B
+0831:  BSF    0A.3
+0832:  IORLW  00
+0833:  BTFSC  03.2
+0834:  GOTO   03B
+0835:  INCF   3E,F
+0836:  MOVWF  3F
+0837:  BCF    0A.3
+0838:  CALL   41E
+0839:  BSF    0A.3
+083A:  GOTO   02E
+....................    delay_ms(200); 
+083B:  MOVLW  C8
+083C:  MOVWF  3F
+083D:  BCF    0A.3
+083E:  CALL   30A
+083F:  BSF    0A.3
+....................    posicao (0,0); 
+0840:  CLRF   3E
+0841:  CLRF   3F
+0842:  BCF    0A.3
+0843:  CALL   3B0
+0844:  BSF    0A.3
+....................    escreve ("verificando..   "); 
+0845:  CLRF   3E
+0846:  MOVF   3E,W
+0847:  BCF    0A.3
+0848:  CALL   184
+0849:  BSF    0A.3
+084A:  IORLW  00
+084B:  BTFSC  03.2
+084C:  GOTO   053
+084D:  INCF   3E,F
+084E:  MOVWF  3F
+084F:  BCF    0A.3
+0850:  CALL   41E
+0851:  BSF    0A.3
+0852:  GOTO   046
+....................    delay_ms(200); 
+0853:  MOVLW  C8
+0854:  MOVWF  3F
+0855:  BCF    0A.3
+0856:  CALL   30A
+0857:  BSF    0A.3
+....................    escreve ("verificando...  "); 
+0858:  CLRF   3E
+0859:  MOVF   3E,W
+085A:  BCF    0A.3
+085B:  CALL   199
+085C:  BSF    0A.3
+085D:  IORLW  00
+085E:  BTFSC  03.2
+085F:  GOTO   066
+0860:  INCF   3E,F
+0861:  MOVWF  3F
+0862:  BCF    0A.3
+0863:  CALL   41E
+0864:  BSF    0A.3
+0865:  GOTO   059
+....................    delay_ms(200); 
+0866:  MOVLW  C8
+0867:  MOVWF  3F
+0868:  BCF    0A.3
+0869:  CALL   30A
+086A:  BSF    0A.3
+....................    escreve ("verificando.... "); 
+086B:  CLRF   3E
+086C:  MOVF   3E,W
+086D:  BCF    0A.3
+086E:  CALL   1AE
+086F:  BSF    0A.3
+0870:  IORLW  00
+0871:  BTFSC  03.2
+0872:  GOTO   079
+0873:  INCF   3E,F
+0874:  MOVWF  3F
+0875:  BCF    0A.3
+0876:  CALL   41E
+0877:  BSF    0A.3
+0878:  GOTO   06C
+....................    
+....................   if (((car1)==(senha1))&&((car2)==(senha2))&&((car3)==(senha3))&&((car4)==(senha4))) 
+0879:  MOVF   34,W
+087A:  SUBWF  30,W
+087B:  BTFSS  03.2
+087C:  GOTO   08B
+087D:  MOVF   35,W
+087E:  SUBWF  31,W
+087F:  BTFSS  03.2
+0880:  GOTO   08B
+0881:  MOVF   36,W
+0882:  SUBWF  32,W
+0883:  BTFSS  03.2
+0884:  GOTO   08B
+0885:  MOVF   37,W
+0886:  SUBWF  33,W
+0887:  BTFSS  03.2
+0888:  GOTO   08B
+....................   { 
+....................   logado=1; 
+0889:  BSF    39.1
+....................   } 
+....................   else 
+088A:  GOTO   0DD
+....................   { 
+....................   logado=0; 
+088B:  BCF    39.1
+....................   posicao (0,0); 
+088C:  CLRF   3E
+088D:  CLRF   3F
+088E:  BCF    0A.3
+088F:  CALL   3B0
+0890:  BSF    0A.3
+....................   escreve ("Senha Incorreta  "); 
+0891:  CLRF   3E
+0892:  MOVF   3E,W
+0893:  BCF    0A.3
+0894:  CALL   1C3
+0895:  BSF    0A.3
+0896:  IORLW  00
+0897:  BTFSC  03.2
+0898:  GOTO   09F
+0899:  INCF   3E,F
+089A:  MOVWF  3F
+089B:  BCF    0A.3
+089C:  CALL   41E
+089D:  BSF    0A.3
+089E:  GOTO   092
+....................   delay_ms(600); 
+089F:  MOVLW  03
+08A0:  MOVWF  3E
+08A1:  MOVLW  C8
+08A2:  MOVWF  3F
+08A3:  BCF    0A.3
+08A4:  CALL   30A
+08A5:  BSF    0A.3
+08A6:  DECFSZ 3E,F
+08A7:  GOTO   0A1
+....................   limpa(); 
+08A8:  BCF    0A.3
+08A9:  CALL   39B
+08AA:  BSF    0A.3
+....................   delay_ms(600); 
+08AB:  MOVLW  03
+08AC:  MOVWF  3E
+08AD:  MOVLW  C8
+08AE:  MOVWF  3F
+08AF:  BCF    0A.3
+08B0:  CALL   30A
+08B1:  BSF    0A.3
+08B2:  DECFSZ 3E,F
+08B3:  GOTO   0AD
+....................   posicao (0,1); 
+08B4:  CLRF   3E
+08B5:  MOVLW  01
+08B6:  MOVWF  3F
+08B7:  BCF    0A.3
+08B8:  CALL   3B0
+08B9:  BSF    0A.3
+....................   escreve ("Senha Incorreta  "); 
+08BA:  CLRF   3E
+08BB:  MOVF   3E,W
+08BC:  BCF    0A.3
+08BD:  CALL   1C3
+08BE:  BSF    0A.3
+08BF:  IORLW  00
+08C0:  BTFSC  03.2
+08C1:  GOTO   0C8
+08C2:  INCF   3E,F
+08C3:  MOVWF  3F
+08C4:  BCF    0A.3
+08C5:  CALL   41E
+08C6:  BSF    0A.3
+08C7:  GOTO   0BB
+....................   delay_ms(600); 
+08C8:  MOVLW  03
+08C9:  MOVWF  3E
+08CA:  MOVLW  C8
+08CB:  MOVWF  3F
+08CC:  BCF    0A.3
+08CD:  CALL   30A
+08CE:  BSF    0A.3
+08CF:  DECFSZ 3E,F
+08D0:  GOTO   0CA
+....................   limpa(); 
+08D1:  BCF    0A.3
+08D2:  CALL   39B
+08D3:  BSF    0A.3
+....................   delay_ms(600); 
+08D4:  MOVLW  03
+08D5:  MOVWF  3E
+08D6:  MOVLW  C8
+08D7:  MOVWF  3F
+08D8:  BCF    0A.3
+08D9:  CALL   30A
+08DA:  BSF    0A.3
+08DB:  DECFSZ 3E,F
+08DC:  GOTO   0D6
+....................   } 
+....................    
+.................... } 
+....................  
+.................... void login() 
+.................... { 
+....................  if ((sai)==(1)&&((click)==(0))) 
+*
+0800:  BTFSS  38.6
+0801:  GOTO   008
+0802:  BTFSC  38.2
+0803:  GOTO   008
+....................   { 
+....................   sai=0; 
+0804:  BCF    38.6
+....................   click=1; 
+0805:  BSF    38.2
+....................   menuprince=0; 
+0806:  CLRF   22
+....................   ir=0; 
+0807:  CLRF   21
+....................   } 
+....................    
+....................  if ((logado)==(1)) 
+0808:  BTFSS  39.1
+0809:  GOTO   00C
+....................  { 
+....................  ((menuprince)=(2)); 
+080A:  MOVLW  02
+080B:  MOVWF  22
+....................  } 
+....................  if ((logado)==(0)) 
+080C:  BTFSC  39.1
+080D:  GOTO   255
+....................  {  
+....................   
+....................   if ((entra)==(1)&&((click)==(0))) 
+080E:  BTFSS  38.5
+080F:  GOTO   0DD
+0810:  BTFSC  38.2
+0811:  GOTO   0DD
+....................   { 
+....................   entra=0; 
+0812:  BCF    38.5
+....................   click=1; 
+0813:  BSF    38.2
+....................   verificar(); 
+....................   } 
+....................    
+....................   if (((direita)==(1))&&(click==(0))) 
+*
+08DD:  BTFSS  38.4
+08DE:  GOTO   0E4
+08DF:  BTFSC  38.2
+08E0:  GOTO   0E4
+....................      { 
+....................      editando++; 
+08E1:  INCF   2F,F
+....................      click=1; 
+08E2:  BSF    38.2
+....................      direita=0; 
+08E3:  BCF    38.4
+....................      } 
+....................    
+....................   if (((esquerda)==(1))&&(click==(0))) 
+08E4:  BTFSS  38.3
+08E5:  GOTO   0EB
+08E6:  BTFSC  38.2
+08E7:  GOTO   0EB
+....................      { 
+....................      editando--; 
+08E8:  DECF   2F,F
+....................      click=1; 
+08E9:  BSF    38.2
+....................      esquerda=0; 
+08EA:  BCF    38.3
+....................      } 
+....................   
+....................    posicao (0,0); 
+08EB:  CLRF   3E
+08EC:  CLRF   3F
+08ED:  BCF    0A.3
+08EE:  CALL   3B0
+08EF:  BSF    0A.3
+....................    escreve("   Senha:"); 
+08F0:  CLRF   3E
+08F1:  MOVF   3E,W
+08F2:  BCF    0A.3
+08F3:  CALL   1D9
+08F4:  BSF    0A.3
+08F5:  IORLW  00
+08F6:  BTFSC  03.2
+08F7:  GOTO   0FE
+08F8:  INCF   3E,F
+08F9:  MOVWF  3F
+08FA:  BCF    0A.3
+08FB:  CALL   41E
+08FC:  BSF    0A.3
+08FD:  GOTO   0F1
+....................    posicao (9,0); 
+08FE:  MOVLW  09
+08FF:  MOVWF  3E
+0900:  CLRF   3F
+0901:  BCF    0A.3
+0902:  CALL   3B0
+0903:  BSF    0A.3
+....................    sprintf (buffer,"%01u",car1); 
+0904:  CLRF   3D
+0905:  MOVLW  3A
+0906:  MOVWF  3C
+0907:  MOVF   30,W
+0908:  MOVWF  3E
+0909:  MOVLW  08
+090A:  MOVWF  3F
+090B:  BCF    0A.3
+090C:  CALL   736
+090D:  BSF    0A.3
+....................    escreve (buffer[0]); 
+090E:  MOVF   3A,W
+090F:  MOVWF  3F
+0910:  BCF    0A.3
+0911:  CALL   41E
+0912:  BSF    0A.3
+....................    posicao (10,0); 
+0913:  MOVLW  0A
+0914:  MOVWF  3E
+0915:  CLRF   3F
+0916:  BCF    0A.3
+0917:  CALL   3B0
+0918:  BSF    0A.3
+....................    sprintf(buffer,"%01u",car2);    
+0919:  CLRF   3D
+091A:  MOVLW  3A
+091B:  MOVWF  3C
+091C:  MOVF   31,W
+091D:  MOVWF  3E
+091E:  MOVLW  08
+091F:  MOVWF  3F
+0920:  BCF    0A.3
+0921:  CALL   736
+0922:  BSF    0A.3
+....................    escreve(buffer[0]); 
+0923:  MOVF   3A,W
+0924:  MOVWF  3F
+0925:  BCF    0A.3
+0926:  CALL   41E
+0927:  BSF    0A.3
+....................    posicao (11,0); 
+0928:  MOVLW  0B
+0929:  MOVWF  3E
+092A:  CLRF   3F
+092B:  BCF    0A.3
+092C:  CALL   3B0
+092D:  BSF    0A.3
+....................    sprintf(buffer,"%01u",car3);   
+092E:  CLRF   3D
+092F:  MOVLW  3A
+0930:  MOVWF  3C
+0931:  MOVF   32,W
+0932:  MOVWF  3E
+0933:  MOVLW  08
+0934:  MOVWF  3F
+0935:  BCF    0A.3
+0936:  CALL   736
+0937:  BSF    0A.3
+....................    escreve(buffer[0]); 
+0938:  MOVF   3A,W
+0939:  MOVWF  3F
+093A:  BCF    0A.3
+093B:  CALL   41E
+093C:  BSF    0A.3
+....................    posicao (12,0); 
+093D:  MOVLW  0C
+093E:  MOVWF  3E
+093F:  CLRF   3F
+0940:  BCF    0A.3
+0941:  CALL   3B0
+0942:  BSF    0A.3
+....................    sprintf(buffer,"%01u",car4);   
+0943:  CLRF   3D
+0944:  MOVLW  3A
+0945:  MOVWF  3C
+0946:  MOVF   33,W
+0947:  MOVWF  3E
+0948:  MOVLW  08
+0949:  MOVWF  3F
+094A:  BCF    0A.3
+094B:  CALL   736
+094C:  BSF    0A.3
+....................    escreve(buffer[0]); 
+094D:  MOVF   3A,W
+094E:  MOVWF  3F
+094F:  BCF    0A.3
+0950:  CALL   41E
+0951:  BSF    0A.3
+....................    posicao (13,0);   
+0952:  MOVLW  0D
+0953:  MOVWF  3E
+0954:  CLRF   3F
+0955:  BCF    0A.3
+0956:  CALL   3B0
+0957:  BSF    0A.3
+....................    escreve("   "); 
+0958:  CLRF   3E
+0959:  MOVF   3E,W
+095A:  BCF    0A.3
+095B:  CALL   1E7
+095C:  BSF    0A.3
+095D:  IORLW  00
+095E:  BTFSC  03.2
+095F:  GOTO   166
+0960:  INCF   3E,F
+0961:  MOVWF  3F
+0962:  BCF    0A.3
+0963:  CALL   41E
+0964:  BSF    0A.3
+0965:  GOTO   159
+....................    posicao (0,1); 
+0966:  CLRF   3E
+0967:  MOVLW  01
+0968:  MOVWF  3F
+0969:  BCF    0A.3
+096A:  CALL   3B0
+096B:  BSF    0A.3
+....................    escreve("         "); 
+096C:  CLRF   3E
+096D:  MOVF   3E,W
+096E:  BCF    0A.3
+096F:  CALL   1EF
+0970:  BSF    0A.3
+0971:  IORLW  00
+0972:  BTFSC  03.2
+0973:  GOTO   17A
+0974:  INCF   3E,F
+0975:  MOVWF  3F
+0976:  BCF    0A.3
+0977:  CALL   41E
+0978:  BSF    0A.3
+0979:  GOTO   16D
+....................    posicao (13,1); 
+097A:  MOVLW  0D
+097B:  MOVWF  3E
+097C:  MOVLW  01
+097D:  MOVWF  3F
+097E:  BCF    0A.3
+097F:  CALL   3B0
+0980:  BSF    0A.3
+....................    escreve("   "); 
+0981:  CLRF   3E
+0982:  MOVF   3E,W
+0983:  BCF    0A.3
+0984:  CALL   1E7
+0985:  BSF    0A.3
+0986:  IORLW  00
+0987:  BTFSC  03.2
+0988:  GOTO   18F
+0989:  INCF   3E,F
+098A:  MOVWF  3F
+098B:  BCF    0A.3
+098C:  CALL   41E
+098D:  BSF    0A.3
+098E:  GOTO   182
+....................  
+....................    if ((editando)==(0)) 
+098F:  MOVF   2F,F
+0990:  BTFSS  03.2
+0991:  GOTO   1B9
+....................    { 
+....................    if (((cima)==(1))&&((click)==(0))) 
+0992:  BTFSS  38.7
+0993:  GOTO   199
+0994:  BTFSC  38.2
+0995:  GOTO   199
+....................    { 
+....................    car1++; 
+0996:  INCF   30,F
+....................    click=1; 
+0997:  BSF    38.2
+....................    cima=0; 
+0998:  BCF    38.7
+....................    } 
+....................    if (((baixo)==(1))&&((click)==(0))) 
+0999:  BTFSS  39.0
+099A:  GOTO   1A0
+099B:  BTFSC  38.2
+099C:  GOTO   1A0
+....................    { 
+....................    car1--; 
+099D:  DECF   30,F
+....................    click=1; 
+099E:  BSF    38.2
+....................    baixo=0; 
+099F:  BCF    39.0
+....................    } 
+....................    if ((car1)==(255)) 
+09A0:  INCFSZ 30,W
+09A1:  GOTO   1A4
+....................    { 
+....................    ((car1)=(9)); 
+09A2:  MOVLW  09
+09A3:  MOVWF  30
+....................    } 
+....................    posicao (9,1); 
+09A4:  MOVLW  09
+09A5:  MOVWF  3E
+09A6:  MOVLW  01
+09A7:  MOVWF  3F
+09A8:  BCF    0A.3
+09A9:  CALL   3B0
+09AA:  BSF    0A.3
+....................    escreve ("^   "); 
+09AB:  CLRF   3E
+09AC:  MOVF   3E,W
+09AD:  BCF    0A.3
+09AE:  CALL   14B
+09AF:  BSF    0A.3
+09B0:  IORLW  00
+09B1:  BTFSC  03.2
+09B2:  GOTO   1B9
+09B3:  INCF   3E,F
+09B4:  MOVWF  3F
+09B5:  BCF    0A.3
+09B6:  CALL   41E
+09B7:  BSF    0A.3
+09B8:  GOTO   1AC
+....................    } 
+....................     
+....................     
+....................    if ((editando)==(1)) 
+09B9:  DECFSZ 2F,W
+09BA:  GOTO   1E2
+....................    { 
+....................    if (((cima)==(1))&&((click)==(0))) 
+09BB:  BTFSS  38.7
+09BC:  GOTO   1C2
+09BD:  BTFSC  38.2
+09BE:  GOTO   1C2
+....................    { 
+....................    car2++; 
+09BF:  INCF   31,F
+....................    click=1; 
+09C0:  BSF    38.2
+....................    cima=0; 
+09C1:  BCF    38.7
+....................    } 
+....................    if (((baixo)==(1))&&((click)==(0))) 
+09C2:  BTFSS  39.0
+09C3:  GOTO   1C9
+09C4:  BTFSC  38.2
+09C5:  GOTO   1C9
+....................    { 
+....................    car2--; 
+09C6:  DECF   31,F
+....................    click=1; 
+09C7:  BSF    38.2
+....................    baixo=0; 
+09C8:  BCF    39.0
+....................    } 
+....................    if ((car2)==(255)) 
+09C9:  INCFSZ 31,W
+09CA:  GOTO   1CD
+....................    { 
+....................    ((car2)=(9)); 
+09CB:  MOVLW  09
+09CC:  MOVWF  31
+....................    } 
+....................    posicao (9,1); 
+09CD:  MOVLW  09
+09CE:  MOVWF  3E
+09CF:  MOVLW  01
+09D0:  MOVWF  3F
+09D1:  BCF    0A.3
+09D2:  CALL   3B0
+09D3:  BSF    0A.3
+....................    escreve (" ^  "); 
+09D4:  CLRF   3E
+09D5:  MOVF   3E,W
+09D6:  BCF    0A.3
+09D7:  CALL   154
+09D8:  BSF    0A.3
+09D9:  IORLW  00
+09DA:  BTFSC  03.2
+09DB:  GOTO   1E2
+09DC:  INCF   3E,F
+09DD:  MOVWF  3F
+09DE:  BCF    0A.3
+09DF:  CALL   41E
+09E0:  BSF    0A.3
+09E1:  GOTO   1D5
+....................    } 
+....................     
+....................     
+....................     
+....................    if ((editando)==(2)) 
+09E2:  MOVF   2F,W
+09E3:  SUBLW  02
+09E4:  BTFSS  03.2
+09E5:  GOTO   20D
+....................    { 
+....................    if (((baixo)==(1))&&((click)==(0))) 
+09E6:  BTFSS  39.0
+09E7:  GOTO   1ED
+09E8:  BTFSC  38.2
+09E9:  GOTO   1ED
+....................    { 
+....................    car3--; 
+09EA:  DECF   32,F
+....................    click=1; 
+09EB:  BSF    38.2
+....................    baixo=0; 
+09EC:  BCF    39.0
+....................    } 
+....................    if (((cima)==(1))&&((click)==(0))) 
+09ED:  BTFSS  38.7
+09EE:  GOTO   1F4
+09EF:  BTFSC  38.2
+09F0:  GOTO   1F4
+....................    { 
+....................    car3++; 
+09F1:  INCF   32,F
+....................    click=1; 
+09F2:  BSF    38.2
+....................    cima=0; 
+09F3:  BCF    38.7
+....................    } 
+....................    if ((car3)==(255)) 
+09F4:  INCFSZ 32,W
+09F5:  GOTO   1F8
+....................    { 
+....................    ((car3)=(9)); 
+09F6:  MOVLW  09
+09F7:  MOVWF  32
+....................    } 
+....................    posicao (9,1); 
+09F8:  MOVLW  09
+09F9:  MOVWF  3E
+09FA:  MOVLW  01
+09FB:  MOVWF  3F
+09FC:  BCF    0A.3
+09FD:  CALL   3B0
+09FE:  BSF    0A.3
+....................    escreve ("  ^ "); 
+09FF:  CLRF   3E
+0A00:  MOVF   3E,W
+0A01:  BCF    0A.3
+0A02:  CALL   15D
+0A03:  BSF    0A.3
+0A04:  IORLW  00
+0A05:  BTFSC  03.2
+0A06:  GOTO   20D
+0A07:  INCF   3E,F
+0A08:  MOVWF  3F
+0A09:  BCF    0A.3
+0A0A:  CALL   41E
+0A0B:  BSF    0A.3
+0A0C:  GOTO   200
+....................    } 
+....................     
+....................    if ((editando)==(3)) 
+0A0D:  MOVF   2F,W
+0A0E:  SUBLW  03
+0A0F:  BTFSS  03.2
+0A10:  GOTO   238
+....................    { 
+....................    if (((baixo)==(1))&&((click)==(0))) 
+0A11:  BTFSS  39.0
+0A12:  GOTO   218
+0A13:  BTFSC  38.2
+0A14:  GOTO   218
+....................    { 
+....................    car4--; 
+0A15:  DECF   33,F
+....................    click=1; 
+0A16:  BSF    38.2
+....................    baixo=0; 
+0A17:  BCF    39.0
+....................    } 
+....................    if (((cima)==(1))&&((click)==(0))) 
+0A18:  BTFSS  38.7
+0A19:  GOTO   21F
+0A1A:  BTFSC  38.2
+0A1B:  GOTO   21F
+....................    { 
+....................    car4++; 
+0A1C:  INCF   33,F
+....................    click=1; 
+0A1D:  BSF    38.2
+....................    cima=0; 
+0A1E:  BCF    38.7
+....................    } 
+....................    if ((car4)==(255)) 
+0A1F:  INCFSZ 33,W
+0A20:  GOTO   223
+....................    { 
+....................    ((car4)=(9)); 
+0A21:  MOVLW  09
+0A22:  MOVWF  33
+....................    } 
+....................    posicao (9,1); 
+0A23:  MOVLW  09
+0A24:  MOVWF  3E
+0A25:  MOVLW  01
+0A26:  MOVWF  3F
+0A27:  BCF    0A.3
+0A28:  CALL   3B0
+0A29:  BSF    0A.3
+....................    escreve ("   ^"); 
+0A2A:  CLRF   3E
+0A2B:  MOVF   3E,W
+0A2C:  BCF    0A.3
+0A2D:  CALL   166
+0A2E:  BSF    0A.3
+0A2F:  IORLW  00
+0A30:  BTFSC  03.2
+0A31:  GOTO   238
+0A32:  INCF   3E,F
+0A33:  MOVWF  3F
+0A34:  BCF    0A.3
+0A35:  CALL   41E
+0A36:  BSF    0A.3
+0A37:  GOTO   22B
+....................    } 
+....................     
+....................    if ((editando)==(4)) 
+0A38:  MOVF   2F,W
+0A39:  SUBLW  04
+0A3A:  BTFSS  03.2
+0A3B:  GOTO   23D
+....................    { 
+....................    ((editando)=(0)); 
+0A3C:  CLRF   2F
+....................    } 
+....................     
+....................    if ((editando)==(255)) 
+0A3D:  INCFSZ 2F,W
+0A3E:  GOTO   241
+....................    { 
+....................    ((editando)=(3)); 
+0A3F:  MOVLW  03
+0A40:  MOVWF  2F
+....................    }    
+....................  
+....................   
+....................   
+....................   if ((car1)>(9)) 
+0A41:  MOVF   30,W
+0A42:  SUBLW  09
+0A43:  BTFSC  03.0
+0A44:  GOTO   246
+....................   { 
+....................   car1=0; 
+0A45:  CLRF   30
+....................   } 
+....................   if ((car2)>(9)) 
+0A46:  MOVF   31,W
+0A47:  SUBLW  09
+0A48:  BTFSC  03.0
+0A49:  GOTO   24B
+....................   { 
+....................   car2=0; 
+0A4A:  CLRF   31
+....................   } 
+....................   if ((car3)>(9)) 
+0A4B:  MOVF   32,W
+0A4C:  SUBLW  09
+0A4D:  BTFSC  03.0
+0A4E:  GOTO   250
+....................   { 
+....................   car3=0; 
+0A4F:  CLRF   32
+....................   } 
+....................   if ((car4)>(9)) 
+0A50:  MOVF   33,W
+0A51:  SUBLW  09
+0A52:  BTFSC  03.0
+0A53:  GOTO   255
+....................   { 
+....................   car4=0; 
+0A54:  CLRF   33
+....................   }  
+.................... }     
+.................... } 
+0A55:  BSF    0A.3
+0A56:  BCF    0A.4
+0A57:  GOTO   5BD (RETURN)
+....................  
+.................... void menu() 
+.................... {  
+....................     
+....................    if (((baixo)==(1))&&((click)==(0))&&((ir)==(0))&&((menuprince)==(0))) 
+*
+0618:  BTFSS  39.0
+0619:  GOTO   635
+061A:  BTFSC  38.2
+061B:  GOTO   635
+061C:  MOVF   21,F
+061D:  BTFSS  03.2
+061E:  GOTO   635
+061F:  MOVF   22,F
+0620:  BTFSS  03.2
+0621:  GOTO   635
+....................    { 
+....................    filtro++; 
+0622:  INCF   2C,F
+....................    if (((baixo)==(1))&&((click)==(0))&&((ir)==(0))&&((menuprince)==(0))&&((filtro)>(20))) 
+0623:  BTFSS  39.0
+0624:  GOTO   635
+0625:  BTFSC  38.2
+0626:  GOTO   635
+0627:  MOVF   21,F
+0628:  BTFSS  03.2
+0629:  GOTO   635
+062A:  MOVF   22,F
+062B:  BTFSS  03.2
+062C:  GOTO   635
+062D:  MOVF   2C,W
+062E:  SUBLW  14
+062F:  BTFSC  03.0
+0630:  GOTO   635
+....................    { 
+....................    filtro=0; 
+0631:  CLRF   2C
+....................    click=1; 
+0632:  BSF    38.2
+....................    baixo=0; 
+0633:  BCF    39.0
+....................    abrir(); 
+0634:  CALL   525
+....................    } 
+....................    } 
+....................     
+....................    if (((sai)==(1))&&((click)==(0))&&((ir)==(0))&&((menuprince)==(0))) 
+0635:  BTFSS  38.6
+0636:  GOTO   652
+0637:  BTFSC  38.2
+0638:  GOTO   652
+0639:  MOVF   21,F
+063A:  BTFSS  03.2
+063B:  GOTO   652
+063C:  MOVF   22,F
+063D:  BTFSS  03.2
+063E:  GOTO   652
+....................    { 
+....................    filtro++; 
+063F:  INCF   2C,F
+....................    if (((sai)==(1))&&((click)==(0))&&((ir)==(0))&&((menuprince)==(0))&&((filtro)>(20))) 
+0640:  BTFSS  38.6
+0641:  GOTO   652
+0642:  BTFSC  38.2
+0643:  GOTO   652
+0644:  MOVF   21,F
+0645:  BTFSS  03.2
+0646:  GOTO   652
+0647:  MOVF   22,F
+0648:  BTFSS  03.2
+0649:  GOTO   652
+064A:  MOVF   2C,W
+064B:  SUBLW  14
+064C:  BTFSC  03.0
+064D:  GOTO   652
+....................    { 
+....................    filtro=0; 
+064E:  CLRF   2C
+....................    click=1; 
+064F:  BSF    38.2
+....................    sai=0; 
+0650:  BCF    38.6
+....................    fechar(); 
+0651:  CALL   439
+....................    } 
+....................    } 
+....................     
+....................    if (((entra)==(1))&&((click)==(0))) 
+0652:  BTFSS  38.5
+0653:  GOTO   65A
+0654:  BTFSC  38.2
+0655:  GOTO   65A
+....................    { 
+....................    click=1; 
+0656:  BSF    38.2
+....................    entra=0; 
+0657:  BCF    38.5
+....................    ((menuprince)=(ir)); 
+0658:  MOVF   21,W
+0659:  MOVWF  22
+....................    } 
+....................     
+....................    if (((esquerda)==(1))&&((click)==(0))) 
+065A:  BTFSS  38.3
+065B:  GOTO   665
+065C:  BTFSC  38.2
+065D:  GOTO   665
+....................    { 
+....................      ir--; 
+065E:  DECF   21,F
+....................      click=1; 
+065F:  BSF    38.2
+....................      esquerda=0; 
+0660:  BCF    38.3
+....................      if ((ir)==(255)) 
+0661:  INCFSZ 21,W
+0662:  GOTO   665
+....................      { 
+....................      ir=1; 
+0663:  MOVLW  01
+0664:  MOVWF  21
+....................      } 
+....................    } 
+....................     
+....................    if (((direita)==(1))&&((click)==(0))) 
+0665:  BTFSS  38.4
+0666:  GOTO   671
+0667:  BTFSC  38.2
+0668:  GOTO   671
+....................    { 
+....................      ir++; 
+0669:  INCF   21,F
+....................      click=1; 
+066A:  BSF    38.2
+....................      direita=0; 
+066B:  BCF    38.4
+....................      if ((ir)==(2)) 
+066C:  MOVF   21,W
+066D:  SUBLW  02
+066E:  BTFSS  03.2
+066F:  GOTO   671
+....................      { 
+....................      ir=0; 
+0670:  CLRF   21
+....................      } 
+....................    } 
+....................     
+....................     
+....................    if (((menuprince)==(0))&&((ir)==(0))&&((logado)==(1))) 
+0671:  MOVF   22,F
+0672:  BTFSS  03.2
+0673:  GOTO   6AA
+0674:  MOVF   21,F
+0675:  BTFSS  03.2
+0676:  GOTO   6AA
+0677:  BTFSS  39.1
+0678:  GOTO   6AA
+....................     { 
+....................     posicao(0,0); 
+0679:  CLRF   3E
+067A:  CLRF   3F
+067B:  CALL   3B0
+....................     escreve("     ONLINE     "); 
+067C:  CLRF   3E
+067D:  MOVF   3E,W
+067E:  CALL   1FD
+067F:  IORLW  00
+0680:  BTFSC  03.2
+0681:  GOTO   686
+0682:  INCF   3E,F
+0683:  MOVWF  3F
+0684:  CALL   41E
+0685:  GOTO   67D
+....................     if ((segundos)<(5)) 
+0686:  MOVF   23,W
+0687:  SUBLW  04
+0688:  BTFSS  03.0
+0689:  GOTO   698
+....................     { 
+....................     posicao (0,1); 
+068A:  CLRF   3E
+068B:  MOVLW  01
+068C:  MOVWF  3F
+068D:  CALL   3B0
+....................     escreve("SAIR PARA FECHAR"); 
+068E:  CLRF   3E
+068F:  MOVF   3E,W
+0690:  CALL   212
+0691:  IORLW  00
+0692:  BTFSC  03.2
+0693:  GOTO   698
+0694:  INCF   3E,F
+0695:  MOVWF  3F
+0696:  CALL   41E
+0697:  GOTO   68F
+....................     } 
+....................     if ((segundos)>(5)) 
+0698:  MOVF   23,W
+0699:  SUBLW  05
+069A:  BTFSC  03.0
+069B:  GOTO   6AA
+....................     { 
+....................     posicao (0,1); 
+069C:  CLRF   3E
+069D:  MOVLW  01
+069E:  MOVWF  3F
+069F:  CALL   3B0
+....................     escreve("BAIXO PARA ABRIR"); 
+06A0:  CLRF   3E
+06A1:  MOVF   3E,W
+06A2:  CALL   227
+06A3:  IORLW  00
+06A4:  BTFSC  03.2
+06A5:  GOTO   6AA
+06A6:  INCF   3E,F
+06A7:  MOVWF  3F
+06A8:  CALL   41E
+06A9:  GOTO   6A1
+....................     } 
+....................     } 
+....................      
+....................    if (((menuprince)==(0))&&((ir)==(0))&&((logado)==(0))) 
+06AA:  MOVF   22,F
+06AB:  BTFSS  03.2
+06AC:  GOTO   6CD
+06AD:  MOVF   21,F
+06AE:  BTFSS  03.2
+06AF:  GOTO   6CD
+06B0:  BTFSC  39.1
+06B1:  GOTO   6CD
+....................     { 
+....................     posicao(0,0); 
+06B2:  CLRF   3E
+06B3:  CLRF   3F
+06B4:  CALL   3B0
+....................     escreve("BEM VINDO       "); 
+06B5:  CLRF   3E
+06B6:  MOVF   3E,W
+06B7:  CALL   23C
+06B8:  IORLW  00
+06B9:  BTFSC  03.2
+06BA:  GOTO   6BF
+06BB:  INCF   3E,F
+06BC:  MOVWF  3F
+06BD:  CALL   41E
+06BE:  GOTO   6B6
+....................     posicao (0,1); 
+06BF:  CLRF   3E
+06C0:  MOVLW  01
+06C1:  MOVWF  3F
+06C2:  CALL   3B0
+....................     escreve("         OFFLINE"); 
+06C3:  CLRF   3E
+06C4:  MOVF   3E,W
+06C5:  CALL   251
+06C6:  IORLW  00
+06C7:  BTFSC  03.2
+06C8:  GOTO   6CD
+06C9:  INCF   3E,F
+06CA:  MOVWF  3F
+06CB:  CALL   41E
+06CC:  GOTO   6C4
+....................     } 
+....................     
+....................    if (((menuprince)==(0))&&((ir)==(1))&&((logado)==(0))) 
+06CD:  MOVF   22,F
+06CE:  BTFSS  03.2
+06CF:  GOTO   6EF
+06D0:  DECFSZ 21,W
+06D1:  GOTO   6EF
+06D2:  BTFSC  39.1
+06D3:  GOTO   6EF
+....................    { 
+....................    posicao (0,0); 
+06D4:  CLRF   3E
+06D5:  CLRF   3F
+06D6:  CALL   3B0
+....................    escreve("EFETUAR         "); 
+06D7:  CLRF   3E
+06D8:  MOVF   3E,W
+06D9:  CALL   266
+06DA:  IORLW  00
+06DB:  BTFSC  03.2
+06DC:  GOTO   6E1
+06DD:  INCF   3E,F
+06DE:  MOVWF  3F
+06DF:  CALL   41E
+06E0:  GOTO   6D8
+....................    posicao (0,1); 
+06E1:  CLRF   3E
+06E2:  MOVLW  01
+06E3:  MOVWF  3F
+06E4:  CALL   3B0
+....................    escreve("           LOGIN"); 
+06E5:  CLRF   3E
+06E6:  MOVF   3E,W
+06E7:  CALL   27B
+06E8:  IORLW  00
+06E9:  BTFSC  03.2
+06EA:  GOTO   6EF
+06EB:  INCF   3E,F
+06EC:  MOVWF  3F
+06ED:  CALL   41E
+06EE:  GOTO   6E6
+....................    } 
+....................    
+....................    if (((menuprince)==(0))&&((ir)==(1))&&((logado)==(1))) 
+06EF:  MOVF   22,F
+06F0:  BTFSS  03.2
+06F1:  GOTO   711
+06F2:  DECFSZ 21,W
+06F3:  GOTO   711
+06F4:  BTFSS  39.1
+06F5:  GOTO   711
+....................    { 
+....................    posicao (0,0); 
+06F6:  CLRF   3E
+06F7:  CLRF   3F
+06F8:  CALL   3B0
+....................    escreve("COMANDAR       "); 
+06F9:  CLRF   3E
+06FA:  MOVF   3E,W
+06FB:  CALL   290
+06FC:  IORLW  00
+06FD:  BTFSC  03.2
+06FE:  GOTO   703
+06FF:  INCF   3E,F
+0700:  MOVWF  3F
+0701:  CALL   41E
+0702:  GOTO   6FA
+....................    posicao (0,1); 
+0703:  CLRF   3E
+0704:  MOVLW  01
+0705:  MOVWF  3F
+0706:  CALL   3B0
+....................    escreve("          LOGADO"); 
+0707:  CLRF   3E
+0708:  MOVF   3E,W
+0709:  CALL   2A4
+070A:  IORLW  00
+070B:  BTFSC  03.2
+070C:  GOTO   711
+070D:  INCF   3E,F
+070E:  MOVWF  3F
+070F:  CALL   41E
+0710:  GOTO   708
+....................    } 
+....................     
+....................     
+.................... } 
+0711:  BSF    0A.3
+0712:  BCF    0A.4
+0713:  GOTO   5B9 (RETURN)
+....................  
+.................... void main() 
+.................... { 
+*
+0BE0:  CLRF   04
+0BE1:  BCF    03.7
+0BE2:  MOVLW  1F
+0BE3:  ANDWF  03,F
+0BE4:  BSF    03.5
+0BE5:  BSF    1F.0
+0BE6:  BSF    1F.1
+0BE7:  BSF    1F.2
+0BE8:  BCF    1F.3
+0BE9:  MOVLW  07
+0BEA:  MOVWF  1C
+....................     
+....................    setup_adc_ports(RA0_RA1_RA3_ANALOG); // Configura conversor A/D para usar Pinos A0,A1,A3 com referência ao Vcc... 
+*
+0C07:  BSF    03.5
+0C08:  BCF    1F.0
+0C09:  BCF    1F.1
+0C0A:  BSF    1F.2
+0C0B:  BCF    1F.3
+....................    setup_adc(ADC_CLOCK_INTERNAL); // Configura conversor A/D para usar clock interno... 
+0C0C:  BCF    1F.6
+0C0D:  BCF    03.5
+0C0E:  BSF    1F.6
+0C0F:  BSF    1F.7
+0C10:  BSF    03.5
+0C11:  BSF    1F.7
+0C12:  BCF    03.5
+0C13:  BSF    1F.0
+....................    setup_psp(PSP_DISABLED); // Desabilita porta paralela... 
+0C14:  BSF    03.5
+0C15:  BCF    09.4
+....................    setup_spi(FALSE); // Desliga comunicação serial SPI... 
+0C16:  BCF    03.5
+0C17:  BCF    14.5
+0C18:  BCF    3B.5
+0C19:  MOVF   3B,W
+0C1A:  BSF    03.5
+0C1B:  MOVWF  07
+0C1C:  BCF    03.5
+0C1D:  BSF    3B.4
+0C1E:  MOVF   3B,W
+0C1F:  BSF    03.5
+0C20:  MOVWF  07
+0C21:  BCF    03.5
+0C22:  BCF    3B.3
+0C23:  MOVF   3B,W
+0C24:  BSF    03.5
+0C25:  MOVWF  07
+0C26:  MOVLW  00
+0C27:  BCF    03.5
+0C28:  MOVWF  14
+0C29:  BSF    03.5
+0C2A:  MOVWF  14
+....................    setup_counters(RTCC_INTERNAL,RTCC_DIV_2); // Configura timer 0 com clock interno e prescaler 1:2... 
+0C2B:  CLRF   77
+0C2C:  BTFSS  77.3
+0C2D:  GOTO   439
+0C2E:  MOVLW  07
+0C2F:  BCF    03.5
+0C30:  CLRF   01
+0C31:  MOVLW  81
+0C32:  MOVWF  04
+0C33:  BCF    03.7
+0C34:  MOVF   00,W
+0C35:  ANDLW  C0
+0C36:  IORLW  0F
+0C37:  MOVWF  00
+0C38:  BSF    03.5
+0C39:  CLRWDT
+0C3A:  MOVLW  81
+0C3B:  MOVWF  04
+0C3C:  MOVF   00,W
+0C3D:  ANDLW  C0
+0C3E:  IORWF  77,W
+0C3F:  MOVWF  00
+....................   // setup_timer_1(T1_DISABLED); // Desliga timer 1... 
+....................   // setup_timer_2(T2_DISABLED,0,1); // Desliga timer 2... 
+....................    lcd_ini(); // Inicializa dislpay LCD... 
+0C40:  BCF    0A.3
+0C41:  BCF    03.5
+0C42:  GOTO   330
+0C43:  BSF    0A.3
+....................    set_adc_channel(1); // Seleciona canal 1 do conversor A/D (Pino A1)... 
+0C44:  MOVLW  08
+0C45:  MOVWF  78
+0C46:  MOVF   1F,W
+0C47:  ANDLW  C7
+0C48:  IORWF  78,W
+0C49:  MOVWF  1F
+....................    delay_us(20); // Aguarda 20 us para estabilização do conversor A/D... 
+0C4A:  MOVLW  06
+0C4B:  MOVWF  77
+0C4C:  DECFSZ 77,F
+0C4D:  GOTO   44C
+0C4E:  NOP
+....................    limpa(); 
+0C4F:  BCF    0A.3
+0C50:  CALL   39B
+0C51:  BSF    0A.3
+....................    setup_timer_1(t1_internal|t1_div_by_1); 
+0C52:  MOVLW  85
+0C53:  MOVWF  10
+....................    enable_interrupts(int_timer1); 
+0C54:  BSF    03.5
+0C55:  BSF    0C.0
+....................    enable_interrupts(global); 
+0C56:  MOVLW  C0
+0C57:  BCF    03.5
+0C58:  IORWF  0B,F
+....................    set_timer1(15535); 
+0C59:  MOVLW  3C
+0C5A:  MOVWF  0F
+0C5B:  MOVLW  AF
+0C5C:  MOVWF  0E
+....................    port_b_pullups(true); // Habilita resistores de pull-up dp Port B... 
+0C5D:  BSF    03.5
+0C5E:  BCF    01.7
+....................    set_tris_b(0b01111111); // Configura Port B...  
+0C5F:  MOVLW  7F
+0C60:  MOVWF  06
+....................    set_tris_c(0b01101100); 
+0C61:  MOVLW  6C
+0C62:  MOVWF  07
+0C63:  BCF    03.5
+0C64:  MOVWF  3B
+....................    output_b(0x00); 
+0C65:  BSF    03.5
+0C66:  CLRF   06
+0C67:  BCF    03.5
+0C68:  CLRF   06
+....................  
+....................     
+....................    while(true) 
+....................  { 
+....................   
+....................    if (((logado)==(0))&&((click)==(0))) 
+0C69:  BTFSC  39.1
+0C6A:  GOTO   4AE
+0C6B:  BTFSC  38.2
+0C6C:  GOTO   4AE
+....................    { 
+....................    if (((segundos)==(0))||((segundos)==(5))||((segundos)==(10))||((segundos)==(15))||((segundos)==(20))||((segundos)==(25))||((segundos)==(30))||((segundos)==(35))||((segundos)==(40))||((segundos)==(45))||((segundos)==(50))||((segundos)==(55))) 
+0C6D:  MOVF   23,F
+0C6E:  BTFSC  03.2
+0C6F:  GOTO   49C
+0C70:  MOVF   23,W
+0C71:  SUBLW  05
+0C72:  BTFSC  03.2
+0C73:  GOTO   49C
+0C74:  MOVF   23,W
+0C75:  SUBLW  0A
+0C76:  BTFSC  03.2
+0C77:  GOTO   49C
+0C78:  MOVF   23,W
+0C79:  SUBLW  0F
+0C7A:  BTFSC  03.2
+0C7B:  GOTO   49C
+0C7C:  MOVF   23,W
+0C7D:  SUBLW  14
+0C7E:  BTFSC  03.2
+0C7F:  GOTO   49C
+0C80:  MOVF   23,W
+0C81:  SUBLW  19
+0C82:  BTFSC  03.2
+0C83:  GOTO   49C
+0C84:  MOVF   23,W
+0C85:  SUBLW  1E
+0C86:  BTFSC  03.2
+0C87:  GOTO   49C
+0C88:  MOVF   23,W
+0C89:  SUBLW  23
+0C8A:  BTFSC  03.2
+0C8B:  GOTO   49C
+0C8C:  MOVF   23,W
+0C8D:  SUBLW  28
+0C8E:  BTFSC  03.2
+0C8F:  GOTO   49C
+0C90:  MOVF   23,W
+0C91:  SUBLW  2D
+0C92:  BTFSC  03.2
+0C93:  GOTO   49C
+0C94:  MOVF   23,W
+0C95:  SUBLW  32
+0C96:  BTFSC  03.2
+0C97:  GOTO   49C
+0C98:  MOVF   23,W
+0C99:  SUBLW  37
+0C9A:  BTFSS  03.2
+0C9B:  GOTO   4AE
+....................    { 
+....................    click=1; 
+0C9C:  BSF    38.2
+....................    (output_high(pin_c5)); 
+0C9D:  BCF    3B.5
+0C9E:  MOVF   3B,W
+0C9F:  BSF    03.5
+0CA0:  MOVWF  07
+0CA1:  BCF    03.5
+0CA2:  BSF    07.5
+....................    delay_ms(10); 
+0CA3:  MOVLW  0A
+0CA4:  MOVWF  3F
+0CA5:  BCF    0A.3
+0CA6:  CALL   30A
+0CA7:  BSF    0A.3
+....................    (output_low(pin_c5)); 
+0CA8:  BCF    3B.5
+0CA9:  MOVF   3B,W
+0CAA:  BSF    03.5
+0CAB:  MOVWF  07
+0CAC:  BCF    03.5
+0CAD:  BCF    07.5
+....................    } 
+....................    } 
+....................    if ((segundos)>(40)) 
+0CAE:  MOVF   23,W
+0CAF:  SUBLW  28
+0CB0:  BTFSC  03.0
+0CB1:  GOTO   4B7
+....................    { 
+....................    logado=0; 
+0CB2:  BCF    39.1
+....................    car1=0; 
+0CB3:  CLRF   30
+....................    car2=0; 
+0CB4:  CLRF   31
+....................    car3=0; 
+0CB5:  CLRF   32
+....................    car4=0; 
+0CB6:  CLRF   33
+....................    } 
+....................     
+....................    if (((menuprince)==(0))&&(!input(pin_b3))&&(!input(pin_b4))&&(!input(pin_b6))&&(!input(pin_b5))&&((click)==(0))) 
+0CB7:  MOVF   22,F
+0CB8:  BTFSS  03.2
+0CB9:  GOTO   4D3
+0CBA:  BSF    03.5
+0CBB:  BSF    06.3
+0CBC:  BCF    03.5
+0CBD:  BTFSC  06.3
+0CBE:  GOTO   4D3
+0CBF:  BSF    03.5
+0CC0:  BSF    06.4
+0CC1:  BCF    03.5
+0CC2:  BTFSC  06.4
+0CC3:  GOTO   4D3
+0CC4:  BSF    03.5
+0CC5:  BSF    06.6
+0CC6:  BCF    03.5
+0CC7:  BTFSC  06.6
+0CC8:  GOTO   4D3
+0CC9:  BSF    03.5
+0CCA:  BSF    06.5
+0CCB:  BCF    03.5
+0CCC:  BTFSC  06.5
+0CCD:  GOTO   4D3
+0CCE:  BTFSC  38.2
+0CCF:  GOTO   4D3
+....................    { 
+....................    click=1; 
+0CD0:  BSF    38.2
+....................    menuprince=99; 
+0CD1:  MOVLW  63
+0CD2:  MOVWF  22
+....................    } 
+....................     
+....................    if ((input(pin_b3))&&(input(pin_b4))&&(input(pin_b6))&&(input(pin_b5))&&((click)==(1))) 
+0CD3:  BSF    03.5
+0CD4:  BSF    06.3
+0CD5:  BCF    03.5
+0CD6:  BTFSS  06.3
+0CD7:  GOTO   4F6
+0CD8:  BSF    03.5
+0CD9:  BSF    06.4
+0CDA:  BCF    03.5
+0CDB:  BTFSS  06.4
+0CDC:  GOTO   4F6
+0CDD:  BSF    03.5
+0CDE:  BSF    06.6
+0CDF:  BCF    03.5
+0CE0:  BTFSS  06.6
+0CE1:  GOTO   4F6
+0CE2:  BSF    03.5
+0CE3:  BSF    06.5
+0CE4:  BCF    03.5
+0CE5:  BTFSS  06.5
+0CE6:  GOTO   4F6
+0CE7:  BTFSS  38.2
+0CE8:  GOTO   4F6
+....................    { 
+....................    parado++; 
+0CE9:  INCF   20,F
+....................       if ((parado)>(30)) 
+0CEA:  MOVF   20,W
+0CEB:  SUBLW  1E
+0CEC:  BTFSC  03.0
+0CED:  GOTO   4F6
+....................       { 
+....................       click=0; 
+0CEE:  BCF    38.2
+....................       parado=0; 
+0CEF:  CLRF   20
+....................       direita=0; 
+0CF0:  BCF    38.4
+....................       esquerda=0; 
+0CF1:  BCF    38.3
+....................       cima=0; 
+0CF2:  BCF    38.7
+....................       baixo=0; 
+0CF3:  BCF    39.0
+....................       entra=0; 
+0CF4:  BCF    38.5
+....................       sai=0;       
+0CF5:  BCF    38.6
+....................       } 
+....................    } 
+....................     
+....................       if ((!input(pin_b6))&&(input(pin_b5))) 
+0CF6:  BSF    03.5
+0CF7:  BSF    06.6
+0CF8:  BCF    03.5
+0CF9:  BTFSC  06.6
+0CFA:  GOTO   50E
+0CFB:  BSF    03.5
+0CFC:  BSF    06.5
+0CFD:  BCF    03.5
+0CFE:  BTFSS  06.5
+0CFF:  GOTO   50E
+....................    { 
+....................     if ((!input(pin_b6))&&(input(pin_b5))&&((click)==(0))) 
+0D00:  BSF    03.5
+0D01:  BSF    06.6
+0D02:  BCF    03.5
+0D03:  BTFSC  06.6
+0D04:  GOTO   50E
+0D05:  BSF    03.5
+0D06:  BSF    06.5
+0D07:  BCF    03.5
+0D08:  BTFSS  06.5
+0D09:  GOTO   50E
+0D0A:  BTFSC  38.2
+0D0B:  GOTO   50E
+....................      { 
+....................      segundos=0; 
+0D0C:  CLRF   23
+....................      direita=1; 
+0D0D:  BSF    38.4
+....................      } 
+....................    }  
+....................     
+....................    if ((input(pin_b6))&&(!input(pin_b5))) 
+0D0E:  BSF    03.5
+0D0F:  BSF    06.6
+0D10:  BCF    03.5
+0D11:  BTFSS  06.6
+0D12:  GOTO   526
+0D13:  BSF    03.5
+0D14:  BSF    06.5
+0D15:  BCF    03.5
+0D16:  BTFSC  06.5
+0D17:  GOTO   526
+....................    { 
+....................     if ((input(pin_b6))&&(!input(pin_b5))&&((click)==(0))) 
+0D18:  BSF    03.5
+0D19:  BSF    06.6
+0D1A:  BCF    03.5
+0D1B:  BTFSS  06.6
+0D1C:  GOTO   526
+0D1D:  BSF    03.5
+0D1E:  BSF    06.5
+0D1F:  BCF    03.5
+0D20:  BTFSC  06.5
+0D21:  GOTO   526
+0D22:  BTFSC  38.2
+0D23:  GOTO   526
+....................      { 
+....................      sai=1; 
+0D24:  BSF    38.6
+....................      segundos=0; 
+0D25:  CLRF   23
+....................      } 
+....................    }  
+....................     
+....................     if ((!input(pin_b6))&&(!input(pin_b5))) 
+0D26:  BSF    03.5
+0D27:  BSF    06.6
+0D28:  BCF    03.5
+0D29:  BTFSC  06.6
+0D2A:  GOTO   53E
+0D2B:  BSF    03.5
+0D2C:  BSF    06.5
+0D2D:  BCF    03.5
+0D2E:  BTFSC  06.5
+0D2F:  GOTO   53E
+....................    { 
+....................     if ((!input(pin_b6))&&(!input(pin_b5))&&((click)==(0))) 
+0D30:  BSF    03.5
+0D31:  BSF    06.6
+0D32:  BCF    03.5
+0D33:  BTFSC  06.6
+0D34:  GOTO   53E
+0D35:  BSF    03.5
+0D36:  BSF    06.5
+0D37:  BCF    03.5
+0D38:  BTFSC  06.5
+0D39:  GOTO   53E
+0D3A:  BTFSC  38.2
+0D3B:  GOTO   53E
+....................      { 
+....................      entra=1; 
+0D3C:  BSF    38.5
+....................      segundos=0; 
+0D3D:  CLRF   23
+....................      } 
+....................    } 
+....................     
+....................     if ((!input(pin_b3))&&(input(pin_b4))) 
+0D3E:  BSF    03.5
+0D3F:  BSF    06.3
+0D40:  BCF    03.5
+0D41:  BTFSC  06.3
+0D42:  GOTO   556
+0D43:  BSF    03.5
+0D44:  BSF    06.4
+0D45:  BCF    03.5
+0D46:  BTFSS  06.4
+0D47:  GOTO   556
+....................    { 
+....................     if ((!input(pin_b3))&&(input(pin_b4))&&((click)==(0))) 
+0D48:  BSF    03.5
+0D49:  BSF    06.3
+0D4A:  BCF    03.5
+0D4B:  BTFSC  06.3
+0D4C:  GOTO   556
+0D4D:  BSF    03.5
+0D4E:  BSF    06.4
+0D4F:  BCF    03.5
+0D50:  BTFSS  06.4
+0D51:  GOTO   556
+0D52:  BTFSC  38.2
+0D53:  GOTO   556
+....................      { 
+....................      esquerda=1; 
+0D54:  BSF    38.3
+....................      segundos=0; 
+0D55:  CLRF   23
+....................      } 
+....................    } 
+....................     
+....................    if ((!input(pin_b3))&&(!input(pin_b4))) 
+0D56:  BSF    03.5
+0D57:  BSF    06.3
+0D58:  BCF    03.5
+0D59:  BTFSC  06.3
+0D5A:  GOTO   56E
+0D5B:  BSF    03.5
+0D5C:  BSF    06.4
+0D5D:  BCF    03.5
+0D5E:  BTFSC  06.4
+0D5F:  GOTO   56E
+....................    { 
+....................     if ((!input(pin_b3))&&(!input(pin_b4))&&((click)==(0))) 
+0D60:  BSF    03.5
+0D61:  BSF    06.3
+0D62:  BCF    03.5
+0D63:  BTFSC  06.3
+0D64:  GOTO   56E
+0D65:  BSF    03.5
+0D66:  BSF    06.4
+0D67:  BCF    03.5
+0D68:  BTFSC  06.4
+0D69:  GOTO   56E
+0D6A:  BTFSC  38.2
+0D6B:  GOTO   56E
+....................      { 
+....................      cima=1; 
+0D6C:  BSF    38.7
+....................      segundos=0; 
+0D6D:  CLRF   23
+....................      } 
+....................    } 
+....................     
+....................    if ((input(pin_b3))&&(!input(pin_b4))) 
+0D6E:  BSF    03.5
+0D6F:  BSF    06.3
+0D70:  BCF    03.5
+0D71:  BTFSS  06.3
+0D72:  GOTO   586
+0D73:  BSF    03.5
+0D74:  BSF    06.4
+0D75:  BCF    03.5
+0D76:  BTFSC  06.4
+0D77:  GOTO   586
+....................    { 
+....................     if ((input(pin_b3))&&(!input(pin_b4))&&((click)==(0))) 
+0D78:  BSF    03.5
+0D79:  BSF    06.3
+0D7A:  BCF    03.5
+0D7B:  BTFSS  06.3
+0D7C:  GOTO   586
+0D7D:  BSF    03.5
+0D7E:  BSF    06.4
+0D7F:  BCF    03.5
+0D80:  BTFSC  06.4
+0D81:  GOTO   586
+0D82:  BTFSC  38.2
+0D83:  GOTO   586
+....................      { 
+....................      baixo=1; 
+0D84:  BSF    39.0
+....................      segundos=0; 
+0D85:  CLRF   23
+....................      } 
+....................    } 
+....................     
+....................    if (!input(pin_b1)) 
+0D86:  BSF    03.5
+0D87:  BSF    06.1
+0D88:  BCF    03.5
+0D89:  BTFSC  06.1
+0D8A:  GOTO   5B4
+....................    { 
+....................    filtro++; 
+0D8B:  INCF   2C,F
+....................    if ((!input(pin_b1))&&((filtro)>(20))) 
+0D8C:  BSF    03.5
+0D8D:  BSF    06.1
+0D8E:  BCF    03.5
+0D8F:  BTFSC  06.1
+0D90:  GOTO   5B4
+0D91:  MOVF   2C,W
+0D92:  SUBLW  14
+0D93:  BTFSC  03.0
+0D94:  GOTO   5B4
+....................    { 
+....................    filtro=0; 
+0D95:  CLRF   2C
+....................     if ((!input(pin_b0))&&(input(pin_b2))) 
+0D96:  BSF    03.5
+0D97:  BSF    06.0
+0D98:  BCF    03.5
+0D99:  BTFSC  06.0
+0D9A:  GOTO   5A5
+0D9B:  BSF    03.5
+0D9C:  BSF    06.2
+0D9D:  BCF    03.5
+0D9E:  BTFSS  06.2
+0D9F:  GOTO   5A5
+....................    { 
+....................    logado=1; 
+0DA0:  BSF    39.1
+....................    fechar(); 
+0DA1:  BCF    0A.3
+0DA2:  CALL   439
+0DA3:  BSF    0A.3
+....................    logado=0; 
+0DA4:  BCF    39.1
+....................    } 
+....................    if ((input(pin_b0))&&(!input(pin_b2))) 
+0DA5:  BSF    03.5
+0DA6:  BSF    06.0
+0DA7:  BCF    03.5
+0DA8:  BTFSS  06.0
+0DA9:  GOTO   5B4
+0DAA:  BSF    03.5
+0DAB:  BSF    06.2
+0DAC:  BCF    03.5
+0DAD:  BTFSC  06.2
+0DAE:  GOTO   5B4
+....................    { 
+....................    logado=1; 
+0DAF:  BSF    39.1
+....................    abrir(); 
+0DB0:  BCF    0A.3
+0DB1:  CALL   525
+0DB2:  BSF    0A.3
+....................    logado=0; 
+0DB3:  BCF    39.1
+....................    } 
+....................    } 
+....................    } 
+....................     
+....................    if ((menuprince)==(0)) 
+0DB4:  MOVF   22,F
+0DB5:  BTFSS  03.2
+0DB6:  GOTO   5BA
+....................    { 
+....................    menu(); 
+0DB7:  BCF    0A.3
+0DB8:  GOTO   618
+0DB9:  BSF    0A.3
+....................    }   
+....................      
+....................    if ((menuprince)==(1)) 
+0DBA:  DECFSZ 22,W
+0DBB:  GOTO   5BD
+....................    { 
+....................    login(); 
+0DBC:  GOTO   000
+....................    } 
+....................     
+....................    if ((menuprince)==(2)) 
+0DBD:  MOVF   22,W
+0DBE:  SUBLW  02
+0DBF:  BTFSS  03.2
+0DC0:  GOTO   5C4
+....................    { 
+....................    comandos(); 
+0DC1:  BCF    0A.3
+0DC2:  GOTO   76B
+0DC3:  BSF    0A.3
+....................    } 
+....................    if ((menuprince)==(99)) 
+0DC4:  MOVF   22,W
+0DC5:  SUBLW  63
+0DC6:  BTFSS  03.2
+0DC7:  GOTO   5C9
+....................    { 
+....................    cadastro(); 
+0DC8:  GOTO   258
+....................    } 
+....................       
+....................  } 
+0DC9:  GOTO   469
+.................... } 
+0DCA:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F39   XT NOWDT NOPUT NODEBUG NOPROTECT NOBROWNOUT NOLVP NOCPD NOWRT

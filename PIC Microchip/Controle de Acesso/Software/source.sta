@@ -1,0 +1,99 @@
+
+ROM used: 3474 (42%)
+          3531 (43%) including unused fragments
+
+          3 Average locations per line
+          5 Average locations per statement
+
+RAM used: 38 (10%) at main() level
+          42 (11%) worst case
+
+Stack used: 5 worst case (out of 7 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+ 1011   723 100  source.c
+  313     0   0  ..\..\..\..\..\..\..\..\Program Files (x86)\PICC\devices\16F877A.h
+----- -----
+ 1324   723 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     21   1   1             @delay_ms1
+0     81   2   1   593  4.8  tempo
+0     17   0   0    48  1.1  pulso
+0     21   1   0    94  1.3  limpa
+0     90   3   4  1323  4.4  posicao
+0     20   1   0             @goto10103
+0     27   1   2   158  2.4  escreve
+0    107   3   0   718  1.4  lcd_ini
+0    243   7   1  1222  3.9  abrir
+0     22   1   0             @const103
+0     21   1   0             @const104
+0     21   1   0             @const105
+0     21   1   0             @const106
+0     21   1   0             @const107
+0     20   1   0             @const109
+0    236   7   1  1238  3.9  fechar
+0     21   1   0             @const114
+0     21   1   0             @const119
+0     92   3   2  1337  4.8  comandos
+0     24   1   0             @const124
+0     25   1   0             @const125
+0     22   1   0             @const126
+1    392  11   2  5798  5.9  cadastro
+0     16   0   0             @const128
+0     13   0   1             @SPRINTF
+0     21   1   3             @DIV88
+0     53   2   2             @PRINTF_U_131
+0     16   0   0             @const142
+0      7   0   0             @const143
+0      9   0   0             @const144
+0      9   0   0             @const145
+0      9   0   0             @const146
+0      9   0   0             @const147
+ Inline        1   819  4.3  verificar
+0     21   1   0             @const149
+0     21   1   0             @const151
+0     21   1   0             @const152
+0     21   1   0             @const153
+0     22   1   0             @const154
+1    600  17   2  5455  5.9  login
+0     14   0   0             @const157
+0      8   0   0             @const162
+0     14   0   0             @const163
+0    252   7   2  3573  5.9  menu
+0     21   1   0             @const170
+0     21   1   0             @const171
+0     21   1   0             @const172
+0     21   1   0             @const173
+0     21   1   0             @const174
+0     21   1   0             @const175
+0     21   1   0             @const176
+0     20   1   0             @const177
+0     21   1   0             @const178
+1    491  14   2  5763  6.9  MAIN
+
+Program metrics:
+    Functions               14
+    Statements              723
+    Comments                149
+    Volume (V)              40598
+    Difficilty (D)          56.1
+    Effort to implement (E) 2277872
+    Time to implement (T)   35 hours, 9 minutes
+    Est Delivered Bugs (B)  6
+    Cyclomatic Complexity   137
+    Maintainability (MI)    16
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-00034    49  0  
+00035-007FF  1938  57  
+00800-00FFF  1483  565  
+01000-017FF     0  2048  
+01800-01FFF     0  2048  
+
+
+
