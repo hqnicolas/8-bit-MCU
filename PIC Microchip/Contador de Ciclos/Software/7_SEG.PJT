@@ -1,0 +1,40 @@
+[PROJECT]
+Target=7_SEG.HEX
+Development_Mode=2
+Processor=0x876F
+Processor_Text=PIC16F876
+ToolSuite=CCS
+
+[Directories]
+Include=
+Library=
+LinkerScript=
+
+[Target Data]
+FileList=C:\Documents and Settings\flavif03\Meus documentos\Nicolas Borba Pereira\Embraco Eletronics Controls Unit\Contador de ciclos\PIC-C\7_SEG.c
+BuildTool=C-COMPILER
+OptionString=+FM
+AdditionalOptionString=
+BuildRequired=1
+
+[7_SEG.c]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+
+[mru-list]
+1=7_SEG.c
+
+[Windows]
+0=0000 7_SEG.c 0 0 796 451 3 0
+
+[Opened Files]
+1=7_SEG.c
+2=
+3=
+[Units]
+Count=1
+1=7_SEG (main)

@@ -1,0 +1,27 @@
+ÀÄ7_SEG
+   ÃÄMAIN  0/655  Ram=4
+   ³  ÃÄ??0??
+   ³  ÃÄ@DIV3232  0/66  Ram=13
+   ³  ÃÄ@DIV3232  0/66  Ram=13
+   ³  ÃÄ@DIV3232  0/66  Ram=13
+   ³  ÃÄ@DIV3232  0/66  Ram=13
+   ³  ÃÄ@DIV3232  0/66  Ram=13
+   ³  ÃÄ@DIV3232  0/66  Ram=13
+   ³  ÃÄ@DIV3232  0/66  Ram=13
+   ³  ÃÄ@DIV3232  0/66  Ram=13
+   ³  ÃÄ@DIV3232  0/66  Ram=13
+   ³  ÃÄ@DIV3232  0/66  Ram=13
+   ³  ÃÄ@DIV3232  0/66  Ram=13
+   ³  ÃÄ@DIV3232  0/66  Ram=13
+   ³  ÃÄ@DIV3232  0/66  Ram=13
+   ³  ÀÄ@DIV3232  0/66  Ram=13
+   ÀÄtrata_t0  0/284  Ram=1
+      ÃÄ@goto10059  0/12  Ram=0
+      ÃÄ@delay_us1  0/20  Ram=1
+      ÃÄ@delay_us1  0/20  Ram=1
+      ÃÄ@delay_us1  0/20  Ram=1
+      ÃÄ@delay_us1  0/20  Ram=1
+      ÃÄ@delay_us1  0/20  Ram=1
+      ÃÄ@delay_us1  0/20  Ram=1
+      ÃÄ@delay_us1  0/20  Ram=1
+      ÀÄ@delay_us1  0/20  Ram=1
