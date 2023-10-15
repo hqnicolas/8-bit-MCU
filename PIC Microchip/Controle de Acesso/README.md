@@ -23,7 +23,7 @@ O portão pode ser fechado pressionando "fechar".
 Após 5 segundos de inatividade, o display será desligado automaticamente.
 Edição de Senha:
 
-Após a edição de um dos caracteres da senha, se demorar 5 segundos, o caractere será apagado.
+- Após a edição de um dos caracteres da senha, se demorar 5 segundos, o caractere será apagado.
 Quando o display é desligado e o portão está aberto, o usuário permanece logado.
 Quando o display é desligado e o portão está fechado, o usuário é deslogado.
 Edição da Senha:
