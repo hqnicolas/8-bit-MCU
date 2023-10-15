@@ -1,0 +1,47 @@
+
+ROM used: 350 (34%)
+          350 (34%) including unused fragments
+
+          1 Average locations per line
+          7 Average locations per statement
+
+RAM used: 17 (27%) at main() level
+          30 (47%) worst case
+
+Stack used: 2 worst case (out of 8 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  114    50 100  Teste_Gerador_Teste_Vida11.c
+   20     0   0  Teste_Gerador_Teste_Vida11.h
+  217     0   0  ..\..\PICC Executavel\devices\12F675.h
+----- -----
+  351    50 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     28   8   0    94  2.5  TIMER1_isr
+0     14   4   0    82  2.8  RTCC_isr
+0    205  59   1  1458  9.4  MAIN
+0     37  11   5             @DIV1616
+
+Program metrics:
+    Functions               3
+    Statements              50
+    Comments                64
+    Volume (V)              1851
+    Difficilty (D)          15.2
+    Effort to implement (E) 28104
+    Time to implement (T)   26 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   9
+    Maintainability (MI)    130
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-0003B    56  0  
+0003C-003FF   290  674  
+
+
+

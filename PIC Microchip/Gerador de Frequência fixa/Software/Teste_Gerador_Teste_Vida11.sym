@@ -1,0 +1,72 @@
+004-005 @READ_PROGRAM_MEMORY8.P1
+019.6   C1OUT
+020     @SCRATCH
+021     @SCRATCH
+021     _RETURN_
+022     @SCRATCH
+023     @SCRATCH
+024     @INTERRUPT_AREA
+025     @INTERRUPT_AREA
+026     @INTERRUPT_AREA
+027     @INTERRUPT_AREA
+028     @INTERRUPT_AREA
+029     @INTERRUPT_AREA
+02A     @INTERRUPT_AREA
+02B     @INTERRUPT_AREA
+02C-02D aux
+02E     conta
+02F     filtro
+030-031 MAIN.FreqSelecionada
+032-033 MAIN.tempo
+034     MAIN.incrementa
+035     MAIN.setup
+036     MAIN.pic_desligado
+037     MAIN.parte1
+038     MAIN.parte2
+039-03A @DIV1616.P1
+039     MAIN.@SCRATCH1
+03B-03C @DIV1616.P1
+03D     @DIV1616.@SCRATCH1
+09B-09C @READ_PROGRAM_MEMORY8.P1
+
+ROM Allocation:
+0042  TIMER1_isr
+005E  RTCC_isr
+0091  MAIN
+006C  @DIV1616
+0091  @cinit
+
+
+User Memory space: 
+
+User Memory space: 
+
+Project Directory:
+    Teste_Gerador_Teste_Vida11\
+
+Project Files:
+    Teste_Gerador_Teste_Vida11.c
+    Teste_Gerador_Teste_Vida11.h
+    ..\..\PICC Executavel\devices\12F675.h
+
+Units:
+    Teste_Gerador_Teste_Vida11 (main)
+
+Compiler Settings:
+    Processor:      PIC12F675
+    Pointer Size:   8
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      Teste_Gerador_Teste_Vida11.err
+    Ext Symbols: Teste_Gerador_Teste_Vida11.esym
+    INHX8:       Teste_Gerador_Teste_Vida11.hex
+    Symbols:     Teste_Gerador_Teste_Vida11.sym
+    List:        Teste_Gerador_Teste_Vida11.lst
+    Debug/COFF:  Teste_Gerador_Teste_Vida11.cof
+    Project:     Teste_Gerador_Teste_Vida11.PJT
+    Call Tree:   Teste_Gerador_Teste_Vida11.tre
+    Statistics:  Teste_Gerador_Teste_Vida11.sta
