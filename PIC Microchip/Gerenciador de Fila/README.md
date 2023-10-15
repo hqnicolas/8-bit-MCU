@@ -1,6 +1,6 @@
 # Placa Controladora de Fila
 
-[PCB](https://i.ibb.co/P1SKZTn/Display-2.jpg)
+![PCB](https://i.ibb.co/P1SKZTn/Display-2.jpg)
 
 - Nicolas Pereira
 
