@@ -1,4 +1,4 @@
-# Projeto de Competência Semestral
+# Projeto de Controlador de Acesso eletrônico
 - Componente Curricular de Eletrônica Aplicada e Microprocessadores
 - Nicolas Pereira
 - 27/09/2010
