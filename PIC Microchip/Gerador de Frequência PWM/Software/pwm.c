@@ -1,6 +1,8 @@
-/*OBJETIVO
+/*
+OBJETIVO
 Gerador de PWM do Boost para controle de Freio.
-*****************************************************/
+****************************************************
+*/
 
 #include <16F628A.h>
 #FUSES NOWDT                 	//No Watch Dog Timer
@@ -14,9 +16,13 @@ Gerador de PWM do Boost para controle de Freio.
 #use delay(clock=4000000,RESTART_WDT)
 
 #priority timer1,rtcc,rb
-/*****************************************
-/*Variaveis Globais
-/****************************************/
+/*
+****************************************
+/*
+Variaveis Globais
+/*
+**************************************
+*/
 
 int				leds,dsp1,dsp2,dsp3,dsp4; //Display
 signed  int		soCont=-1;				  //contador de uso geral
@@ -48,7 +54,7 @@ int16		temp;
 #define		bus5		pin_b5
 #define		bus6		pin_a6
 #define		bus7		pin_b7	
-#define		fre_pin		pin_b3  //pino da frequência
+#define		fre_pin		pin_b3  //pino da frequÃªncia
 
 
 #define		out_a		0b10110000
@@ -73,20 +79,20 @@ int16		temp;
 #define		led4		0b11011111
 #define		L1_L2		0b11111110	
 
-//Posição física da tecla em relação ao PORT
+//PosiÃ§Ã£o fÃ­sica da tecla em relaÃ§Ã£o ao PORT
 #define		sw1			1
 #define		sw3			3
 #define		sw4			4
 #define		sw5			5
 
-//Posição lógica da tecla no Flag "inFlag"
+//PosiÃ§Ã£o lÃ³gica da tecla no Flag "inFlag"
 #define		sw1b		0
 #define		sw3b		1
 #define		sw4b		2
 #define		sw5b		3
 
 /*****************************************
-/*Protótipos
+/*ProtÃ³tipos
 /****************************************/
 void output_bus(int8 bus,boolean DPst );
 int	filtro (int flag);
@@ -94,7 +100,7 @@ int	retorna_display(int16 numero);
 void	at_display();
 
 /*****************************************
-/*Interupção Timer0 
+/*InterupÃ§Ã£o Timer0 
 /*Utilizada como timer do "Sistema Operacional"
 /****************************************/
 #int_RTCC
@@ -114,12 +120,12 @@ TIMER1_isr()
 
 }
 /*****************************************
-/*Função Main
+/*FunÃ§Ã£o Main
 /****************************************/
 void main(){
   
   int16		retorno,retorno2;  		
-//configurações
+//configuraÃ§Ãµes
   
 //TIMER 0	
    setup_timer_0(RTCC_INTERNAL|RTCC_DIV_8);
@@ -148,7 +154,7 @@ void main(){
 
 enable_interrupts(GLOBAL); 
 
-// inicialização de variaveis
+// inicializaÃ§Ã£o de variaveis
 	status = 0;
 	fCont[0] = 0;
 	fCont[1] = 0;
@@ -168,7 +174,7 @@ enable_interrupts(GLOBAL);
 // loop principal
 	while(true){
 		set_pwm1_duty (pwmcont/4);
-	//exibição no display	
+	//exibiÃ§Ã£o no display	
 		retorno = pwmcont/1000 ;
 		retorno2 = pwmcont%1000; 
 		retorno = retorno2/100; 
@@ -211,7 +217,7 @@ enable_interrupts(GLOBAL);
 					pwmcont = 0;	
 			}
 	//debug
-	// verifica atualização do Display 
+	// verifica atualizaÃ§Ã£o do Display 
 	if (atualizar_display){
 		at_display();
 		atualizar_display = false;
@@ -219,7 +225,7 @@ enable_interrupts(GLOBAL);
 	}//while
 }
 /*****************************************
-/*Função converte para display 7 seguimentos
+/*FunÃ§Ã£o converte para display 7 seguimentos
 /* 
 /****************************************/
 int	retorna_display(int16 numero){
@@ -242,7 +248,7 @@ switch (numero){
 }
 }
 /*****************************************
-/*Função Atualiza display
+/*FunÃ§Ã£o Atualiza display
 /* atualiza o estado do diplsy e le teclas
 /****************************************/
 
@@ -314,8 +320,8 @@ switch (soCont){
 }
 
 /*****************************************
-/*Função output_bus(int8 bus) 
-/* Exterioriza valor lógico da dado do display e leds
+/*FunÃ§Ã£o output_bus(int8 bus) 
+/* Exterioriza valor lÃ³gico da dado do display e leds
 /****************************************/
 void output_bus(int8 bus,boolean DPst){
 	output_bit(bus0,bit_test(bus,0));
@@ -330,7 +336,7 @@ void output_bus(int8 bus,boolean DPst){
 
 }
 /*****************************************
-/*Função filtro (int flag) 
+/*FunÃ§Ã£o filtro (int flag) 
 /* Debouce das teclas
 /****************************************/
 int	filtro (int flag){
@@ -356,7 +362,7 @@ int	filtro (int flag){
 		}//for
 
 	return (ret|inFlag);
-}//função
+}//funÃ§Ã£o
 
 
 
