@@ -1,0 +1,33 @@
+
+ROM used: 769 (38%)
+          769 (38%) including unused fragments
+
+          1 Average locations per line
+          5 Average locations per statement
+
+RAM used: 38 (22%) at main() level
+          42 (24%) worst case
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  365   162 100  C:\Projeto_Display\Gerador de Frequencia\Untitled.c
+  203     0   0  C:\PROGRA~1\PICC\devices\16F628A.h
+----- -----
+ 1136   324 Total
+
+Page ROM  %  RAM  Functions:
+---- --- --- ---  ----------
+0      4   1   0  RTCC_isr
+0      8   1   0  TIMER1_isr
+0    279  36   6  main
+0     38   5   5  @DIV1616
+0    108  14   2  retorna_display
+0    234  30   3  at_display
+0     41   5   2  output_bus
+
+ Segment   Used  Free
+---------  ----  ----
+00000-00003     4  0  
+00004-00038    53  0  
+00039-007FF   712  1279  
+
