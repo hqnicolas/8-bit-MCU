@@ -1,4 +1,4 @@
-# Circuito Testador de Inversor de Frequência Variável
+# Circuito Analizador de Inversor de Frequência Variável
 - Nicolas Pereira
 - 27/03/2012
 - Software Interpretado por Pic C PCWHD Compiler Versão 4.105
