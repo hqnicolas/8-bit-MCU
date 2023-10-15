@@ -1,4 +1,5 @@
 # Projeto de Competência Semestral
+- Componente Curricular de Eletrônica Aplicada e Microprocessadores
 - Nicolas Pereira
 - 27/09/2010
 # Proposta: 
