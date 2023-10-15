@@ -1,4 +1,4 @@
-# Antigos Projetos 8 Bit
+# Antigos Projetos 8 Bit em C
 - ``Lista dos meus projetos útilizando Microchip PIC 8 Bits`` 
 - [Analizador de defeitos para inversores de frequência](https://github.com/hqnicolas/8-bit-MCU/tree/main/PIC%20Microchip/Analizador%20de%20Inversores)
 - [Contador de Ciclos](https://github.com/hqnicolas/8-bit-MCU/tree/main/PIC%20Microchip/Contador%20de%20Ciclos)
