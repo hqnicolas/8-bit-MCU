@@ -2,6 +2,8 @@
 - Componente Curricular de Eletrônica Aplicada e Microprocessadores
 - Nicolas Pereira
 - 27/09/2010
+- Software Interpretado por Pic C PCWHD Compiler Versão 4.105
+- Hardware Interpretado por Proteus ISIS 7.7 Sp2
 # Proposta: 
 ``
 Este projeto foi desenvolvido com a utilização do PIC 16F877A, fonte de tensão continua, cristal de quartzo, teclado seis teclas, display LCD, motor e sensores.
