@@ -17,7 +17,7 @@
                                                                 leitura da E2Prom interna desativada; escrita na memória
                                                                 flash desativada...
                                                                */
-int16 senha=0;
+int16 senha=0;                               //Declaração de variáveis
 int16 senha_aux=0;
 int16 beep=0;
 int8 centena, dezena, unidade =0;
@@ -25,7 +25,7 @@ int8 senhahigh, senhalow;
 int1 aux_beep=0;
 int1 aux1, aux2, aux3;
 
-#locate senha=0x20
+#locate senha=0x20                              //Atribui endereços específicos de memória para algumas variáveis usando locate
 #locate senha_aux=0x22
 #locate senhahigh=0x23
 #locate senhalow=0x24
@@ -33,7 +33,7 @@ int1 aux1, aux2, aux3;
 #locate decimo=0x26
 #locate beep=0x27
 
-void varre_display()  # Função para converter e exibir a senha em um display de sete segmentos.
+void varre_display()  // Função para converter e exibir a senha em um display de sete segmentos.
 {
       centena=0;
       dezena=0;
@@ -64,14 +64,14 @@ void varre_display()  # Função para converter e exibir a senha em um display d
 
 void main()
 {
-   setup_adc_ports(NO_ANALOGS);
+   setup_adc_ports(NO_ANALOGS);                  // Configuração inicial do microcontrolador
    setup_psp(PSP_DISABLED);
    setup_spi(FALSE);
    setup_counters(RTCC_INTERNAL,RTCC_DIV_2);
    setup_timer_1(T1_DISABLED);
    setup_timer_2(T2_DISABLED,0,1);
    
-   port_b_pullups(true);
+   port_b_pullups(true);                        // Configuração de portas de entrada/saída
    set_tris_b(0b11111111);
    output_b(0x00);
    set_tris_c(0b11110000);
@@ -79,7 +79,7 @@ void main()
    set_tris_d(0b01100000);
    output_d(0x00);
    
-   if ((read_eeprom(3))!=347)
+   if ((read_eeprom(3))!=347)                  // Inicialização da senha a partir da EEPROM
    {
       write_eeprom(3,347);
       write_eeprom(1,0);
@@ -91,11 +91,11 @@ void main()
    senhahigh=0;
    senhalow=0;
 
-   while(true)
+   while(true)                                // Loop principal
    {
       varre_display();
       
-      if((((!input(pin_b0))||(!input(pin_b1))) && (aux1==true)) && (senha<999))
+      if((((!input(pin_b0))||(!input(pin_b1))) && (aux1==true)) && (senha<999))            // Lógica para aumentar a senha
       {
          senha++;
          aux1=false;
@@ -108,8 +108,8 @@ void main()
          beep=3000;
       }
       if((input(pin_b0))&&(input(pin_b1))) aux1=true;
-
-      if((((!input(pin_b2))||(!input(pin_b3))) && (aux2==true)) && (senha>0))
+  
+      if((((!input(pin_b2))||(!input(pin_b3))) && (aux2==true)) && (senha>0))           // Lógica para diminuir a senha
       {
          senha--;
          aux2=false;
@@ -123,7 +123,7 @@ void main()
       }
       if((input(pin_b2))&&(input(pin_b3))) aux2=true;
       
-      if((!input(pin_b4)) && (aux3==true))
+      if((!input(pin_b4)) && (aux3==true))                                           // Lógica para resetar a senha
       {
          senha=0;
          aux3=false;
@@ -137,7 +137,7 @@ void main()
       }
       if(input(pin_b4)) aux3=true;
       
-      /*if((beep>1000)&&(beep!=0))
+      /*if((beep>1000)&&(beep!=0))                                                    // Lógica para emitir beeps
       {
          output_high(pin_d3);
          delay_us(250);
