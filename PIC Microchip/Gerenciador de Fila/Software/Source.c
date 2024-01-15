@@ -1,20 +1,20 @@
 /*
 ##############################################################################################################
 # Projeto de Nicolas Pereira
-# Desenvolvido em C para aplicaÁ„o em PIC 8bits
+# Desenvolvido em C para aplica√ß√£o em PIC 8bits
 # Criciuma, quarta-feira, 22 de Fevereiro de 2011
 ##############################################################################################################
 */
 
 #include <16F877A.h> // Arquivo de include do microcontrolador usado...
 #use delay(clock=4000000) // Estipula valor de clock para as rotinas de delay...
-#use fast_io(b) // Usa modo r·pido de entrada e saÌda...
-#fuses XT,NOWDT,NOPUT,NOPROTECT,NOBROWNOUT,NOLVP,NOCPD,NOWRT   /* Acerta os bits de configuraÁ„o:
+#use fast_io(b) // Usa modo r√°pido de entrada e sa√≠da...
+#fuses XT,NOWDT,NOPUT,NOPROTECT,NOBROWNOUT,NOLVP,NOCPD,NOWRT   /* Acerta os bits de configura√ß√£o:
                                                                 Oscilador do tipo XT; watchdog timer desligado; reset de
-                                                                power-up desligado; proteÁ„o de cÛdigo desativada; reset
-                                                                de brown-out desligado; programaÁ„o por nÌvel baixo de
-                                                                tens„o desativada, pino B3 liberado para I/O; proteÁ„o de
-                                                                leitura da E2Prom interna desativada; escrita na memÛria
+                                                                power-up desligado; prote√ß√£o de c√≥digo desativada; reset
+                                                                de brown-out desligado; programa√ß√£o por n√≠vel baixo de
+                                                                tens√£o desativada, pino B3 liberado para I/O; prote√ß√£o de
+                                                                leitura da E2Prom interna desativada; escrita na mem√≥ria
                                                                 flash desativada...
                                                                */
 int16 senha=0;
@@ -33,7 +33,7 @@ int1 aux1, aux2, aux3;
 #locate decimo=0x26
 #locate beep=0x27
 
-void varre_display()
+void varre_display()  # Fun√ß√£o para converter e exibir a senha em um display de sete segmentos.
 {
       centena=0;
       dezena=0;
